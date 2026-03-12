@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical AI Platforms — Product & Technology Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Source+Sans+3:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--bg:#faf8f5;--paper:#fff;--ink:#1a1a1a;--ink2:#555;--ink3:#888;--ink4:#bbb;--rule:#e0dcd6;--accent:#c44536;--accent2:#2c5f7c;--accent3:#6b7f3b;--cream:#f4f0ea;--highlight:#fff8e7;--tag-blue:#e8f0f8;--tag-green:#e8f5e9;--tag-red:#fde8e8;--tag-purple:#f0e8f5;--tag-orange:#fff0e0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased}
+.container{max-width:1200px;margin:0 auto;padding:0 48px}
+/* HERO */
+.hero{padding:100px 0 80px;text-align:center;border-bottom:2px solid var(--ink);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 39px,var(--rule) 39px,var(--rule) 40px);opacity:.3}
+.hero-label{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);position:relative}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.1;margin:16px 0;position:relative;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;color:var(--accent)}
+.hero .deck{font-size:1.1rem;color:var(--ink2);max-width:680px;margin:0 auto;position:relative;font-weight:300}
+/* NAV */
+nav.toc{position:sticky;top:0;z-index:100;background:rgba(250,248,245,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:12px 0}
+nav.toc .toc-inner{display:flex;gap:8px;overflow-x:auto;max-width:1200px;margin:0 auto;padding:0 48px;scrollbar-width:none}
+nav.toc .toc-inner::-webkit-scrollbar{display:none}
+nav.toc a{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);text-decoration:none;padding:6px 14px;border:1px solid transparent;border-radius:2px;white-space:nowrap;transition:all .2s}
+nav.toc a:hover{color:var(--ink);border-color:var(--rule)}
+/* SECTIONS */
+section{padding:72px 0;border-bottom:1px solid var(--rule)}
+.section-num{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;font-weight:500}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;line-height:1.15;margin:8px 0 12px;letter-spacing:-.01em}
+.section-deck{font-size:1rem;color:var(--ink2);max-width:680px;margin-bottom:48px;font-weight:300}
+/* CARDS */
+.grid{display:grid;gap:24px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.card{background:var(--paper);border:1px solid var(--rule);padding:28px;position:relative;transition:box-shadow .25s}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.card p{font-size:.88rem;color:var(--ink2)}
+.card .mono{font-family:'IBM Plex Mono',monospace;font-size:1.5rem;font-weight:500;color:var(--accent);display:block;margin-bottom:4px}
+.card .sublabel{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+/* COMPANY BLOCK */
+.company-block{background:var(--paper);border:1px solid var(--rule);margin-bottom:32px;overflow:hidden}
+.company-header{display:flex;align-items:center;justify-content:space-between;padding:24px 28px;border-bottom:1px solid var(--rule)}
+.company-name{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:800}
+.company-badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:3px 10px;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
+.badge-blue{background:var(--tag-blue);color:var(--accent2)}
+.badge-red{background:var(--tag-red);color:var(--accent)}
+.badge-green{background:var(--tag-green);color:var(--accent3)}
+.badge-purple{background:var(--tag-purple);color:#7c5cfc}
+.badge-orange{background:var(--tag-orange);color:#b85c00}
+.company-body{padding:28px}
+.company-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.detail-section h4{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+.detail-section p,.detail-section li{font-size:.86rem;color:var(--ink2);line-height:1.7}
+.detail-section ul{list-style:none;padding:0}
+.detail-section li{padding:4px 0;padding-left:16px;position:relative}
+.detail-section li::before{content:'→';position:absolute;left:0;color:var(--accent)}
+/* TABLE */
+.table-wrap{background:var(--paper);border:1px solid var(--rule);overflow:hidden;margin-bottom:24px}
+.table-wrap h3{font-family:'Playfair Display',serif;font-size:1rem;padding:18px 24px 10px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+thead{background:var(--cream)}
+th{text-align:left;padding:10px 14px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--rule);font-weight:500}
+td{padding:10px 14px;border-bottom:1px solid var(--rule);color:var(--ink2);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(196,69,54,.02)}
+td strong{color:var(--ink)}
+/* CHART */
+.chart-wrap{background:var(--paper);border:1px solid var(--rule);padding:24px;margin-bottom:24px}
+.chart-wrap h3{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;margin-bottom:2px}
+.chart-wrap .chart-sub{font-size:.75rem;color:var(--ink3);margin-bottom:16px;font-family:'IBM Plex Mono',monospace}
+.chart-container{position:relative;width:100%}
+/* INSIGHT */
+.insight{border-left:3px solid var(--accent);background:var(--highlight);padding:24px 28px;margin:28px 0}
+.insight h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:6px}
+.insight p{font-size:.88rem;color:var(--ink2)}
+/* VERDICT */
+.verdict{display:flex;gap:20px;margin:24px 0}
+.verdict-item{flex:1;padding:20px;background:var(--paper);border:1px solid var(--rule)}
+.verdict-item h4{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.verdict-item.works h4{color:var(--accent3)}
+.verdict-item.fails h4{color:var(--accent)}
+.verdict-item p{font-size:.84rem;color:var(--ink2)}
+/* ARCH DIAGRAM */
+.arch{display:flex;flex-direction:column;gap:4px;margin:20px 0}
+.arch-layer{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--paper);border:1px solid var(--rule);font-size:.84rem}
+.arch-layer .layer-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);min-width:90px;font-weight:500}
+.arch-layer .layer-desc{color:var(--ink2)}
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}.company-grid{grid-template-columns:1fr}.verdict{flex-direction:column}.container{padding:0 24px}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+<p class="hero-label">Companion Report — February 2026</p>
+<h1>What These Platforms <em>Actually</em> Look Like</h1>
+<p class="deck">A product and technology deep dive into eight industrial AI companies — examining the interfaces operators see, the algorithms underneath, and what separates working products from vaporware.</p>
+</div>
+
+<nav class="toc"><div class="toc-inner">
+<a href="#platforms">Platform Overview</a>
+<a href="#comparison">Comparison Matrix</a>
+<a href="#phaidra">Phaidra</a>
+<a href="#augury">Augury</a>
+<a href="#cognite">Cognite</a>
+<a href="#ethonai">EthonAI</a>
+<a href="#fero">Fero Labs</a>
+<a href="#imubit">Imubit</a>
+<a href="#bright">BrightAI</a>
+<a href="#archetype">Archetype AI</a>
+<a href="#analysis">What Works</a>
+<a href="Phy_Secondary.html" style="color:var(--accent);border:1px solid var(--accent);border-radius:2px;">Strategic Report →</a>
+</div></nav>
+
+<!-- SECTION 1: PLATFORM OVERVIEW -->
+<section id="platforms">
+<div class="container">
+<p class="section-num">Part I — The Product Layer</p>
+<div class="section-title">Eight companies, four product archetypes</div>
+<p class="section-deck">Every industrial AI startup claims "AI-powered optimization." But what do operators, engineers, and executives actually see when they log in? What does the interface look like at 3 AM when a chiller is failing? The product experience — not the algorithm — is what determines adoption.</p>
+
+<div class="grid g4" style="margin-bottom:32px">
+<div class="card"><span class="mono" style="color:var(--accent2)">01</span><h3>Closed-Loop Controllers</h3><p>Autonomous AI that writes setpoints directly to control systems. Operators see dashboards but the AI acts independently within safety constraints. <strong>Phaidra, Imubit.</strong></p></div>
+<div class="card"><span class="mono" style="color:var(--accent3)">02</span><h3>Diagnostic Platforms</h3><p>Alert-based systems that detect anomalies, diagnose root causes, and prescribe actions. Human-in-the-loop: the operator decides. <strong>Augury, EthonAI, Fero Labs.</strong></p></div>
+<div class="card"><span class="mono" style="color:#7c5cfc">03</span><h3>Data Infrastructure</h3><p>Industrial data platforms that unify IT/OT silos and provide the foundation for AI applications built on top. <strong>Cognite.</strong></p></div>
+<div class="card"><span class="mono" style="color:#b85c00">04</span><h3>Sensor Intelligence</h3><p>Hardware + software stacks that deploy physical sensors/devices and layer AI on top for monitoring and autonomous action. <strong>BrightAI, Archetype AI.</strong></p></div>
+</div>
+
+<div class="chart-wrap"><h3>Platform Delivery Model Comparison</h3><div class="chart-sub">How each platform is delivered and consumed</div><div class="chart-container" style="height:320px"><canvas id="chartDelivery"></canvas></div></div>
+
+<div class="table-wrap">
+<h3>Platform-at-a-Glance: What Each Company Actually Delivers</h3>
+<table>
+<thead><tr><th>Company</th><th>Delivery</th><th>Hardware?</th><th>Primary Interface</th><th>Alerts</th><th>Mobile</th><th>Role-Based Views</th><th>Control Mode</th></tr></thead>
+<tbody>
+<tr><td><strong>Phaidra</strong></td><td>Cloud SaaS + on-prem agent</td><td>No — software overlay</td><td>Web dashboard + BMS integration</td><td>Yes — anomaly + deviation</td><td>No native app</td><td>Operators vs. engineering</td><td>Fully autonomous closed-loop</td></tr>
+<tr><td><strong>Augury</strong></td><td>SaaS + proprietary sensors</td><td>Yes — Halo sensors + gateways</td><td>Web platform + mobile app</td><td>Yes — prescriptive diagnostics</td><td>Yes — full mobile app</td><td>Floor tech → plant mgr → VP</td><td>Human-in-the-loop advisory</td></tr>
+<tr><td><strong>Cognite</strong></td><td>Cloud SaaS (Azure/GCP/AWS)</td><td>No — pure software</td><td>Web app (fusion.cognite.com)</td><td>Yes — threshold-based</td><td>Yes — field worker app</td><td>Field worker → engineer → data team</td><td>Data platform (enables AI apps)</td></tr>
+<tr><td><strong>EthonAI</strong></td><td>Cloud SaaS</td><td>No — integrates existing</td><td>Web app — 3 modules</td><td>Yes — anomaly detection</td><td>No native app</td><td>Process eng → plant mgmt → data sci</td><td>Advisory + auto setpoint recs</td></tr>
+<tr><td><strong>Fero Labs</strong></td><td>Cloud SaaS</td><td>No — pure software</td><td>Web app — process twin</td><td>Yes — live predictions</td><td>No native app</td><td>Process eng → metallurgist → mgmt</td><td>Advisory + optimization recs</td></tr>
+<tr><td><strong>Imubit</strong></td><td>On-prem + secure cloud</td><td>No — software on DCS</td><td>Control room dashboards</td><td>Yes — constraint alerts</td><td>Cloud sim (off-site)</td><td>Operator → process eng → planner</td><td>Fully autonomous closed-loop</td></tr>
+<tr><td><strong>BrightAI</strong></td><td>Platform + proprietary HW</td><td>Yes — sensors, drones, wearables</td><td>Stateful OS web + wearable</td><td>Yes — real-time diagnostics</td><td>Yes — wearable copilot</td><td>Field tech → supervisor → exec</td><td>Autonomous inspection + advisory</td></tr>
+<tr><td><strong>Archetype AI</strong></td><td>Platform API + on-prem</td><td>No — uses existing sensors</td><td>Developer API + Agent Workbench</td><td>Yes — anomaly flagging</td><td>Not yet</td><td>Developer-first (API-driven)</td><td>Advisory (pilot stage)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- SECTION 2: COMPARISON MATRIX -->
+<section id="comparison">
+<div class="container">
+<p class="section-num">Part I (cont.) — Head-to-Head</p>
+<div class="section-title">The interface experience matters more than the algorithm</div>
+<div class="chart-wrap"><h3>User Engagement & Time-to-Value</h3><div class="chart-sub">Reported engagement rates and deployment timelines</div><div class="chart-container" style="height:340px"><canvas id="chartEngagement"></canvas></div></div>
+<div class="table-wrap">
+<h3>Client Effectiveness — What Users Actually Say</h3>
+<table>
+<thead><tr><th>Company</th><th>User Sentiment</th><th>Key Quote / Signal</th><th>Adoption Speed</th></tr></thead>
+<tbody>
+<tr><td><strong>Phaidra</strong></td><td><span class="badge badge-green">Very Positive</span></td><td>Fusepoint VP: "Very good deal" — ROI &lt;2 years, millions in savings. Virtually eliminated thermal excursions at Merck. Operators initially feared "WarGames" scenario but came around.</td><td>6–12 mo full portfolio rollout</td></tr>
+<tr><td><strong>Augury</strong></td><td><span class="badge badge-green">Excellent</span></td><td>90% user engagement rate — highest in category. "Addicted to the data." Colgate-Palmolive scaled to 31 sites in 18 months. ROI often under 30 days.</td><td>Insights within 1 day of install</td></tr>
+<tr><td><strong>Cognite</strong></td><td><span class="badge badge-blue">Positive</span></td><td>12+ languages supported. Used by BP, Aker, Saudi Aramco. Skagerak Energi: eliminated need for additional developers. Strong developer community (Cognite Hub).</td><td>Weeks for data foundation</td></tr>
+<tr><td><strong>EthonAI</strong></td><td><span class="badge badge-green">Very Positive</span></td><td>100% defect detection across 150,000 inspections at Siemens Rastatt. Lindt uses for chocolate production QC. &lt;3 month ROI. Now sold through Siemens channel.</td><td>&lt;3 months to ROI</td></tr>
+<tr><td><strong>Fero Labs</strong></td><td><span class="badge badge-green">Very Positive</span></td><td>Gerdau: $3/ton alloy savings. One metallurgist found nitrogen root cause in minutes (previously 2 weeks). WEF Technology Pioneer 2024.</td><td>POC: weeks. Full ROI: months</td></tr>
+<tr><td><strong>Imubit</strong></td><td><span class="badge badge-green">Very Positive</span></td><td>"We make more money on days we run Imubit than days we don't." Used by 7 of top 10 US refiners. 90+ closed-loop apps deployed. $0.30–$0.50/bbl margin boost.</td><td>Advisory → closed-loop in weeks</td></tr>
+<tr><td><strong>BrightAI</strong></td><td><span class="badge badge-blue">Early Positive</span></td><td>$80M→$100M+ revenue largely while bootstrapped. 250K+ endpoints. Azuria Water: "Game-changer." Emerged from stealth April 2025.</td><td>Sensors deploy in minutes</td></tr>
+<tr><td><strong>Archetype AI</strong></td><td><span class="badge badge-orange">Pilot Stage</span></td><td>Boeing pilot: 5–10× more computationally efficient than internal tools. "The team loves it." Buy decision deferred. Kajima construction deployment in Japan.</td><td>8 weeks to operational (Boeing)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- PHAIDRA -->
+<section id="phaidra">
+<div class="container">
+<p class="section-num">Company Deep Dive</p>
+<div class="company-block">
+<div class="company-header"><span class="company-name">Phaidra</span><div class="company-badges"><span class="badge badge-red">Closed-Loop AI Control</span><span class="badge badge-blue">DeepMind Alumni</span><span class="badge badge-green">$110M+ Raised</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>Phaidra delivers a <strong>supervisory AI layer</strong> that sits on top of existing BMS/SCADA systems — it does not replace controllers but rather changes how setpoints are determined. The front-end interface serves as a monitoring and audit tool for operators, while the AI operates autonomously in the background.</p>
+<p style="margin-top:10px">The platform has two key interfaces. <strong>For operators:</strong> a status dashboard showing real-time parameter values across all controlled systems — chiller plants, cooling towers, CRAC units, CDUs. It displays what the AI is currently doing, why, and what it plans to do next. Operators can override at any time via a physical "red button" that reverts to the original static sequence of operations. <strong>For engineers:</strong> historical analytics showing optimization patterns, energy consumption trends, deviation events, and constraint boundary analysis. An LLM-based analytics agent (launched 2025) allows natural-language queries across all siloed data systems — BMS, PMS, OEM manuals — replacing analyses that previously took days or weeks.</p>
+<p style="margin-top:10px">There is <strong>no native mobile app</strong>. The platform is designed for control-room and engineering-office use cases. Data flows at approximately 15-minute intervals through secure cloud pipelines into site-specific AI agents.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Core AI</span><span class="layer-desc">Deep Reinforcement Learning (not LLM). Each site gets a dedicated AI agent trained on its specific plant configuration. Agents evaluate billions of possible setpoint combinations at each decision interval.</span></div>
+<div class="arch-layer"><span class="layer-label">Data Flow</span><span class="layer-desc">BMS → secure cloud pipeline → AI agent → optimized setpoints written back to BMS. ~15 min decision cycles. Weather data, energy pricing, and historical performance data integrated.</span></div>
+<div class="arch-layer"><span class="layer-label">Safety</span><span class="layer-desc">Sandboxed constraints: max setpoint change per cycle (e.g., 0.5°F chilled water temp), minimum restart delays to prevent compressor cycling, operator override ("red button"), automatic fallback to static SOO if connection drops.</span></div>
+<div class="arch-layer"><span class="layer-label">Integration</span><span class="layer-desc">Hardware-agnostic — works with any BMS vendor (Trane, JCI, Schneider, Siemens). No hardware installation required. BMS controls vendor involvement required for initial integration.</span></div>
+<div class="arch-layer"><span class="layer-label">New: 2025+</span><span class="layer-desc">LLM-based observability agent for natural-language data queries. NVIDIA Omniverse integration for AI factory design-to-operations pipeline. Liquid cooling CDU agents for GPU clusters (reduced thermal spikes ~80% in NVIDIA tests).</span></div>
+</div>
+</div>
+</div>
+<div class="detail-section" style="margin-top:20px">
+<h4>What Makes It Unique — And Its Limitations</h4>
+<p>Phaidra is the only platform in this cohort that autonomously controls mission-critical cooling without human approval per decision. The RL approach means the AI genuinely improves over time — learning plant-specific dynamics that static control logic can never capture. At Merck's West Point vaccine facility, this virtually eliminated thermal excursions across four interconnected chiller plants, with 12% energy savings.</p>
+<p style="margin-top:10px"><strong>Limitations:</strong> The biggest challenge is data quality during onboarding — tag mapping, naming conventions, and dirty historian data can stretch implementation from weeks to months. The former VP of Customer Success noted that Phaidra built an internal tool to accelerate this, aiming to reduce setup from a year to potentially a month. Startup risk is a real concern: the GSK Senior Director noted that multiple clients saw clear value in POCs but didn't proceed to full deployment because of viability concerns about a startup controlling mission-critical infrastructure.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- AUGURY -->
+<section id="augury">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">Augury</span><div class="company-badges"><span class="badge badge-green">$361M Raised</span><span class="badge badge-blue">Full-Stack HW + SW</span><span class="badge badge-purple">~$100M ARR</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>Augury delivers the most consumer-grade UX in industrial AI. The <strong>Halo Machine Health platform</strong> is a web-based SaaS application with a fully functional mobile app — operators can check machine health from their phone while walking the factory floor.</p>
+<p style="margin-top:10px"><strong>Role-based views are explicit:</strong> Floor technicians see prioritized alert lists with prescriptive repair instructions — the platform doesn't just show red/yellow/green status but tells you exactly what's wrong and how to fix it. Plant managers see site-level overview dashboards tracking machine improvements made, downtime hours avoided, and dollars saved. Corporate VPs see a cross-site aggregated dashboard comparing site performance, adoption rates, and cumulative ROI — designed to drive enterprise expansion conversations.</p>
+<p style="margin-top:10px">Augury reports a <strong>90% user engagement rate</strong> — the highest published figure in industrial AI. Colgate-Palmolive's VP noted that insights and best practices can be shared between facilities instantly. The platform integrates with existing CMMS (Computerized Maintenance Management Systems) so work orders flow directly from Augury alerts into existing maintenance workflows. ROI is often achieved within 30 days of deployment, with first machine improvements typically within 1 week.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Sensors</span><span class="layer-desc">Proprietary Halo R4000 series: IP66/68/69 rated, 2"×2" form factor, captures vibration, temperature, and magnetic data. Supports machines from 1 RPM to 40G. Up to 40 sensors per Cassia X-2000 gateway. Self-healing network with auto-recovery.</span></div>
+<div class="arch-layer"><span class="layer-label">Edge AI</span><span class="layer-desc">New: Edge-AI computations in the sensor and gateway itself — not just cloud. Hybrid-AI prescriptive diagnostics. This is the industry's first "AI at every layer of the IoT stack" — sensor, gateway, and cloud.</span></div>
+<div class="arch-layer"><span class="layer-label">Core AI</span><span class="layer-desc">Pre-trained on 10+ years of proprietary machine data — 500M+ hours across 20,000+ pump models. The world's largest mechanical vibration dataset. ML models detect, diagnose, and prescribe fixes for specific fault types (bearing wear, misalignment, imbalance, cavitation, etc.).</span></div>
+<div class="arch-layer"><span class="layer-label">Human Layer</span><span class="layer-desc">Guaranteed Diagnostics backed by "insurance guarantee" — AI diagnostics so accurate they're insured. Plus a Success and Reliability team of human experts available to validate complex cases.</span></div>
+<div class="arch-layer"><span class="layer-label">Integration</span><span class="layer-desc">Baker Hughes/Bently Nevada partnership: Machine Health Powered by Augury for energy and heavy industry. Microsoft Azure Marketplace listing. CMMS integrations standard.</span></div>
+</div>
+</div>
+</div>
+<div class="insight" style="margin-top:20px">
+<h4>Why Augury's Adoption Rates Are an Outlier</h4>
+<p>While 74% of manufacturers fail to scale Industry 4.0 technologies, Augury's customers routinely expand from pilot to multi-site. The secret: they invested heavily in UX, making prescriptive diagnostics readable by maintenance technicians without data science skills. Colgate-Palmolive went from pilot to 31 sites in 18 months. ICL saved $1M at a single facility in under 10 months. One customer documented a $4 million save from a single 24-hour early alert. The platform succeeds because it speaks the language of the mechanic, not the data scientist.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- COGNITE -->
+<section id="cognite">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">Cognite</span><div class="company-badges"><span class="badge badge-blue">Data Platform</span><span class="badge badge-green">$170M+ Revenue</span><span class="badge badge-purple">Pre-IPO</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>Cognite Data Fusion (CDF) is fundamentally different from the others — it is not an AI application but the <strong>data infrastructure layer</strong> on which AI applications get built. Think of it as the operating system for industrial data, rather than a specific tool.</p>
+<p style="margin-top:10px"><strong>User workspaces are role-specific:</strong> Field workers get a mobile-first interface for accessing OT/IT data on-site, searching for equipment data, and submitting checklists. Engineers get "Charts" — an interactive time-series analysis tool with data quality indicators, threshold monitoring, and the ability to overlay operational activities onto data trends. Data managers get extraction pipeline monitoring, data model configuration, and contextualization tools. All users get <strong>Atlas AI</strong> — an LLM-powered industrial agent that enables Google-like natural language search across all industrial data, with cross-agent chat for fluid conversations across different AI agents.</p>
+<p style="margin-top:10px">The platform supports 12+ languages and has 90+ pre-built extractors for industrial systems (OPC-UA, OSIsoft PI, MQTT, ERP connectors). Available on all three major clouds (Azure, GCP, AWS). Developer-oriented with Python/JavaScript SDKs, REST APIs, and Power BI/Excel connectors.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Data Layer</span><span class="layer-desc">Industrial Knowledge Graph: contextualizes all IT/OT/ET data (time series, P&IDs, 3D CAD, documents, events) into a single semantic model. 90+ extractors for standard industrial protocols.</span></div>
+<div class="arch-layer"><span class="layer-label">AI Layer</span><span class="layer-desc">Atlas AI industrial agents: LLM-powered agents for data retrieval, root-cause analysis, time-series trending. Agent Toolkit for building custom agents. Cross-agent chat for multi-step reasoning.</span></div>
+<div class="arch-layer"><span class="layer-label">Canvas</span><span class="layer-desc">"Industrial Canvas" — world's first collaborative, AI-powered analytics workspace for industrial teams. Think Miro/Figma for process engineers, where data visualizations, P&IDs, and AI insights coexist.</span></div>
+<div class="arch-layer"><span class="layer-label">Tools</span><span class="layer-desc">Charts (time-series), Maintenance Planning, Field Productivity, Data Workflows (orchestration), 3D model contextualization, diagram parsing. Templates for reusable data models.</span></div>
+<div class="arch-layer"><span class="layer-label">Developer</span><span class="layer-desc">Open API-first. Python/JS SDKs. Spark connector. OData for Excel/Power BI. Cognite Functions (serverless). Cognite Hub community. NEAT (open-source data modeling tool uses Excel as front-end).</span></div>
+</div>
+</div>
+</div>
+<div class="insight" style="margin-top:20px">
+<h4>Cognite's Moat: The Industrial Knowledge Graph</h4>
+<p>Cognite doesn't compete with Phaidra, Augury, or EthonAI — it provides the data layer they all need. Every industrial AI deployment struggles with the same bottleneck: fragmented, messy, siloed operational data. Cognite's value is in solving this once, then enabling any AI application to build on top. BP, Aker, Saudi Aramco, and Celanese are customers. The risk for competitors: if Cognite becomes the standard industrial data layer (like Snowflake for enterprise), it controls the most valuable chokepoint in the stack.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ETHONAI -->
+<section id="ethonai">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">EthonAI</span><div class="company-badges"><span class="badge badge-purple">Causal AI</span><span class="badge badge-blue">ETH Zürich Spinout</span><span class="badge badge-green">Siemens Channel</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>EthonAI is now branded as an <strong>"Industrial AI Platform"</strong> with three distinct modules, each designed for a different manufacturing persona:</p>
+<p style="margin-top:10px"><strong>Analyst Module</strong> (for process engineers): The core product. A no-code/low-code environment where engineers can run root cause analysis across thousands of process parameters. The interface features an interactive causal graph — a visual map showing true cause-and-effect relationships (not just correlations) between process variables. Engineers can prompt an AI agent in natural language to summarize pressing production issues, then drill down through causal chains. Includes virtual design-of-experiments (test what-if scenarios digitally before changing anything on the line), autonomous centerlining (recommended optimal setpoints), and a Jupyter-based scripting environment for custom analysis.</p>
+<p style="margin-top:10px"><strong>Inspector Module</strong> (for quality teams): Hardware-agnostic computer vision for visual defect detection. Can be set up with as few as 20 reference images and adapt to new product variants in minutes. At Siemens Rastatt, it achieved 100% defect detection across 150,000 inspections and 200 product variants.</p>
+<p style="margin-top:10px"><strong>Operator Module</strong> (for line operators): Real-time dashboards with AI-based anomaly detection and process control guidance. Designed for shift workers — shows what's deviating, what caused it, and what to adjust. Bridges the gap between expert engineers and frontline operators.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Core AI</span><span class="layer-desc">Proprietary causal AI — the "Delta" algorithm. A graph-based approach that models true cause-and-effect (not correlations). Performs 4× better than existing causal algorithms (NOTEARS) on benchmarks with 10× faster runtime. Handles unit-based, batch-based, and time-based data.</span></div>
+<div class="arch-layer"><span class="layer-label">Data Layer</span><span class="layer-desc">Unifies data from historians, SCADA, MES, spreadsheets, lab systems, and sensor feeds. Process mining for material flow and value stream analysis. Automatic data contextualization.</span></div>
+<div class="arch-layer"><span class="layer-label">Vision AI</span><span class="layer-desc">Hardware-agnostic CV for quality inspection. Transfer learning requires only ~20 reference images. New product variant setup in minutes vs. days for traditional CV systems.</span></div>
+<div class="arch-layer"><span class="layer-label">LLM Layer</span><span class="layer-desc">Manufacturing-specific LLMs for natural language interaction. "Agentic workflows with causal reasoning" — AI agents that combine language understanding with domain-specific causal models.</span></div>
+<div class="arch-layer"><span class="layer-label">Channel</span><span class="layer-desc">Listed on Siemens Xcelerator marketplace — sold through Siemens' global sales force. This is enormous for distribution: access to Siemens' installed base of industrial customers.</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FERO LABS -->
+<section id="fero">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">Fero Labs</span><div class="company-badges"><span class="badge badge-green">WEF Pioneer 2024</span><span class="badge badge-blue">Explainable AI</span><span class="badge badge-orange">$30M Raised</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>Fero Labs positions itself as the <strong>"Profitable Sustainability Platform"</strong> — an AI tool that process engineers and metallurgists use daily within their existing workflow, not a separate system they have to learn.</p>
+<p style="margin-top:10px">The platform builds a <strong>virtual replica (digital twin)</strong> of any industrial process. Engineers interact with it through three primary workflows: <strong>Diagnostics</strong> — root cause analysis that evaluates all relevant process factors simultaneously (vs. traditional RCA which requires pre-selecting variables). The "ExplainIt" feature provides natural-language text explanations of why each live prediction was made, including which factors are anomalous. <strong>Optimization</strong> — given a target (minimize alloy cost, maximize yield, meet quality spec), the AI recommends optimal setpoints. The new "Flexible Optimization" feature handles branching production paths where the end product isn't known at the start. <strong>Simulation</strong> — what-if scenario testing where engineers can adjust inputs and see predicted outcomes before making any physical changes.</p>
+<p style="margin-top:10px">The key UX differentiator: <strong>"white-box" ML</strong>. Every prediction comes with a full transparency view showing which factors drove the result and how the model weighted them. This is specifically designed for process engineers who refuse to trust black-box recommendations — they need to understand the "why" before they'll act.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Core AI</span><span class="layer-desc">"Catalyst AI" engine — proprietary white-box machine learning models that evaluate multiple non-linear relationships between data points. Full model transparency: every prediction is explainable down to individual factor contributions.</span></div>
+<div class="arch-layer"><span class="layer-label">Process Twin</span><span class="layer-desc">Virtual replica of the customer's specific production process. Handles complex multi-path production scenarios (e.g., steel heats that can become multiple different end products). Auto-retrains as new data flows in — no manual model maintenance required.</span></div>
+<div class="arch-layer"><span class="layer-label">ExplainIt</span><span class="layer-desc">Real-time text-based explanations of anomalous factors in each live prediction. Goes beyond visualized data — simple text analyses are easier for humans to read, remember, and communicate across shifts and teams. Each explanation is automatically saved for knowledge retention.</span></div>
+<div class="arch-layer"><span class="layer-label">Integration</span><span class="layer-desc">Connects to process historians, lab databases, quality systems. Designed to work within existing Lean Six Sigma workflows — not replace them. Partnership with Carnegie Mellon CISR for steelmaking research curriculum.</span></div>
+<div class="arch-layer"><span class="layer-label">Verticals</span><span class="layer-desc">Deep focus: Steel (Gerdau, SSAB, global producers), Chemicals, Cement, CPG/Food. $20M+ documented client savings. ~100,000 tons CO₂ emissions reduced.</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- IMUBIT -->
+<section id="imubit">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">Imubit</span><div class="company-badges"><span class="badge badge-red">Closed-Loop RL</span><span class="badge badge-blue">7/10 Top US Refiners</span><span class="badge badge-green">90+ Deployments</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>Imubit's <strong>Optimizing Brain™ Solution</strong> is designed for the refinery control room — the most conservative, safety-critical environment in process industry. The interface philosophy: <strong>"make the complex legible for operators who've been running plants for 30 years."</strong></p>
+<p style="margin-top:10px">The platform provides multiple interface layers: <strong>Control room dashboards</strong> show real-time controller status, projected moves, and prediction trajectories across all units in matrix and chart views. Multi-unit views display data across all controllers, all units, every process in one place. <strong>Operator controls</strong> allow direct update of constraint boundaries and move limits — the operator always has authority. <strong>Engineering dashboards</strong> track KPIs for each AI application, perform economic debottlenecking analysis, and visualize constraint interactions. <strong>Planner interface</strong> connects real-time product and feedstock pricing directly into the neural network.</p>
+<p style="margin-top:10px">A remarkable UX choice: Imubit designed an <strong>intuitive point-and-click interface</strong> so that with just one hour of training, users with no AI expertise can build their own models, review insights, and run what-if scenarios. Some facilities use Imubit models as operator training simulators — new operators "duel the AI optimizer" to learn optimal operating strategies.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Core AI</span><span class="layer-desc">Deep Learning Process Control (DLPC) — proprietary closed-loop neural network controllers powered by reinforcement learning. First technology in ARC Advisory Group's new "Closed Loop AI Optimization" (AIO) category.</span></div>
+<div class="arch-layer"><span class="layer-label">Foundation</span><span class="layer-desc">Foundation Process Model™ — data-first process twin that captures hidden governing dynamics between variables across all process states. Uses Monte Carlo simulations to show learned relationships and prediction errors to engineers.</span></div>
+<div class="arch-layer"><span class="layer-label">Control</span><span class="layer-desc">Works WITH existing APC (not replacing it). DLPC handles non-linear cross-unit optimization that linear APC can't model. Writes setpoints to DCS every few minutes. Integrates with Honeywell (TDC, Experion), DeltaV, Foxboro, AspenTech DMC+/DMC3.</span></div>
+<div class="arch-layer"><span class="layer-label">Security</span><span class="layer-desc">100% on-premise software for the control-critical path — fully compliant with process control network cybersecurity. Air-gapped environments supported. Separate cloud component for simulations only (no data transmitted into control network).</span></div>
+<div class="arch-layer"><span class="layer-label">Scope</span><span class="layer-desc">Plant-wide optimization across unit boundaries — not single-unit. Integrates planning/economics, process control, and engineering into one unified model. Handles crude blending, fractionation, conversion, reforming.</span></div>
+</div>
+</div>
+</div>
+<div class="insight" style="margin-top:20px">
+<h4>Why Imubit Wins in Refineries: The Cross-Unit Advantage</h4>
+<p>Traditional APC optimizes each unit in isolation. But refineries are interconnected systems where a crude heater adjustment changes diesel quality several columns downstream. Imubit's RL controller sees the entire plant as one living system, optimizing globally rather than locally. This is why they deliver $0.30–$0.50/bbl margin improvement — capturing value that linear models structurally cannot. The operator-training-simulator use case is particularly clever: it builds trust while simultaneously collecting data that improves the model.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- BRIGHTAI -->
+<section id="bright">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">BrightAI</span><div class="company-badges"><span class="badge badge-orange">Physical AI</span><span class="badge badge-green">$100M+ Revenue</span><span class="badge badge-blue">250K+ Endpoints</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>BrightAI's <strong>Stateful OS</strong> is the most hardware-integrated platform in this cohort. It's not a dashboard you log into — it's an operating system that spans proprietary sensors, wearable devices, autonomous drones, and cloud analytics.</p>
+<p style="margin-top:10px"><strong>For field technicians:</strong> A wearable copilot (smart helmet + AR glasses) provides hands-free AI guidance in the field. The system equips a first-day worker with the equivalent of 30 years of master technician experience by providing contextual, real-time diagnostic guidance based on sensor data and an operations knowledge graph. Voice copilot integration for complex repairs.</p>
+<p style="margin-top:10px"><strong>For supervisors:</strong> Real-time site dashboards showing 24/7 monitoring across all deployed endpoints. Automated dispatch — when the AI detects an issue, it can automatically generate and assign a work order. New scheduling features allow shift/day/week planning for inspection checklists.</p>
+<p style="margin-top:10px"><strong>For executives:</strong> Fleet-wide visibility across 25,000+ sites. ROI dashboards showing labor hours saved, failures prevented, and cost avoidance. The "Stateful Sticker" — an ultra-low-cost postage-stamp-sized sensor that deploys in minutes on legacy equipment — is designed to expand monitoring to tens of millions of smaller assets previously uneconomical to instrument.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Hardware</span><span class="layer-desc">Proprietary sensor portfolio: Stateful Sticker (deploy in minutes), smart helmets, AR glasses, autonomous inspection drones. 250K+ active endpoints across 25K+ sites. Edge AI processing on device.</span></div>
+<div class="arch-layer"><span class="layer-label">Platform</span><span class="layer-desc">Stateful OS: multimodal AI platform that processes sensor streams, generates diagnostics, powers automated dispatch, and manages autonomous systems. Operations knowledge graph captures institutional expertise.</span></div>
+<div class="arch-layer"><span class="layer-label">Autonomy</span><span class="layer-desc">Autonomous robotics and drone systems for infrastructure inspection — automating dangerous, complex, repetitive tasks. AI-powered defect detection from drone imagery. Pipeline video analysis (Azuria Water partnership).</span></div>
+<div class="arch-layer"><span class="layer-label">AI Core</span><span class="layer-desc">Multimodal edge AI: processes visual, acoustic, vibration, temperature, and other sensor data. Models improve with each repair cycle — data feedback loop where every dispatch teaches the system.</span></div>
+<div class="arch-layer"><span class="layer-label">Verticals</span><span class="layer-desc">Water (pipeline inspection), power grid (drone inspection with Osmose Utilities), gas, HVAC, pest control, waste management, manufacturing. B2B enterprise contracts spanning HW + SW + services.</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ARCHETYPE AI -->
+<section id="archetype">
+<div class="container">
+<div class="company-block">
+<div class="company-header"><span class="company-name">Archetype AI</span><div class="company-badges"><span class="badge badge-purple">Foundation Model</span><span class="badge badge-blue">$48M Raised</span><span class="badge badge-orange">Pilot Stage</span></div></div>
+<div class="company-body">
+<div class="company-grid">
+<div class="detail-section">
+<h4>The Platform Experience</h4>
+<p>Archetype AI is the most developer-oriented company in this cohort. It does <strong>not</strong> offer a turnkey solution for operators — it provides a <strong>platform and API for building</strong> "Physical Agents" that interpret sensor data.</p>
+<p style="margin-top:10px"><strong>For developers:</strong> The Archetype Platform exposes Newton (the foundation model) through Python bindings and REST APIs. A few lines of code create, configure, and deploy agents. The "Agent Workbench" provides testing, evaluation, and performance tuning. "Lenses" are task-specific applications built on Newton that transform sensor data into customized insights (e.g., Safety Lens, Workplan Validation Lens, Predictive Maintenance Lens). Ready-to-use agent templates like "Data Scout" (instant data retrieval) and "Time Series Trender" (root-cause analysis) lower the barrier.</p>
+<p style="margin-top:10px"><strong>For operators (through Boeing pilot):</strong> Currently functions primarily as a notification/alert tool. Establishes baseline normal behavior, then flags deviations using quartile-based thresholds. Multiple alert levels: warning, risk, and proactive preemptive alerts when trends head toward thresholds. Boeing engineers still go to native machine logs for debugging rather than using Archetype's root cause features — a maturity gap the company is working to close.</p>
+<p style="margin-top:10px"><strong>Deployment flexibility:</strong> Runs in cloud, on-prem, or at the edge on a single off-the-shelf GPU. Full air-gapped deployment supported. Setup requires one line of code for the entire platform. Can run on pre-recorded data for simulation and testing.</p>
+</div>
+<div class="detail-section">
+<h4>The Technology Stack</h4>
+<div class="arch">
+<div class="arch-layer"><span class="layer-label">Model</span><span class="layer-desc">Newton TimeFusion: 2.0B-parameter multimodal foundation model. "Universal Tokens" unify human language and time-series sensor data into a single representation space. Trained on physical-world sensor data across diverse domains.</span></div>
+<div class="arch-layer"><span class="layer-label">Fusion</span><span class="layer-desc">Fuses accelerometers, gyroscopes, radars, cameras, microphones, thermometers, environmental sensors, and natural language. No sensor-specific model training required — the foundation model generalizes across modalities.</span></div>
+<div class="arch-layer"><span class="layer-label">Agents</span><span class="layer-desc">"Physical Agents" — deployable AI applications that interpret multimodal sensor data in real-time. Unlike LLM agents that live in digital spaces, Physical Agents interpret signals from the physical world tied to specific locations, assets, and operations.</span></div>
+<div class="arch-layer"><span class="layer-label">Edge</span><span class="layer-desc">Runs on a single off-the-shelf GPU locally. Eliminates cloud dependency. Microservices architecture handles sensor integration, data processing, real-time inference, and API interactions. One-line installation.</span></div>
+<div class="arch-layer"><span class="layer-label">Partners</span><span class="layer-desc">Infineon (sensor hardware partner — first to use Newton developer platform), Kajima (Japanese construction), Boeing (manufacturing/MRO pilot), Amazon Industrial Innovation Fund investor, Venrock-backed.</span></div>
+</div>
+</div>
+</div>
+<div class="insight" style="margin-top:20px">
+<h4>The Foundation Model Bet: Highest Risk, Highest Ceiling</h4>
+<p>Archetype's thesis is radical: instead of building narrow AI models for specific use cases (like Augury for vibration or Phaidra for cooling), build one model that understands all physical signals and let users configure applications in natural language. In Boeing's pilot, Newton matched accuracy of Boeing's internal tools while being 5–10× more computationally efficient. If Newton proves to generalize across domains, it could be the "GPT moment" for industrial AI. But Boeing's experience also reveals the gap: engineers still go to native logs rather than trusting the AI's root cause analysis. The technology is promising but the product experience lags behind more mature platforms like Augury and Imubit.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECTION: WHAT WORKS / WHAT DOESN'T -->
+<section id="analysis">
+<div class="container">
+<p class="section-num">Part III — Synthesis</p>
+<div class="section-title">What works, what doesn't, and the patterns that predict adoption</div>
+<p class="section-deck">Drawing from web research, published case studies, and expert interviews with actual customers and former employees of these companies, we can identify clear patterns in what drives industrial AI adoption — and what kills it.</p>
+
+<div class="chart-wrap"><h3>Technology Maturity vs. Product Maturity</h3><div class="chart-sub">The gap between algorithmic sophistication and usable product experience</div><div class="chart-container" style="height:380px"><canvas id="chartMaturity"></canvas></div></div>
+
+<div style="margin:32px 0">
+<div class="section-title" style="font-size:1.4rem">The Five Patterns That Predict Adoption Success</div>
+</div>
+
+<div class="grid g2" style="margin-bottom:32px">
+
+<div class="card" style="border-left:3px solid var(--accent3)">
+<h3>1. Speak the Operator's Language, Not the Data Scientist's</h3>
+<p>Augury's 90% engagement rate — the highest in industrial AI — comes from designing for maintenance technicians, not engineers. The platform tells mechanics exactly what's wrong and how to fix it, in their vocabulary. One customer said the team is "addicted to the data." Compare this to Archetype AI, where Boeing engineers still go to native machine logs for debugging rather than trusting the AI's root cause analysis — a maturity gap that keeps it as an alert tool rather than a decision tool.</p>
+<p style="margin-top:10px"><strong>Lesson:</strong> The interface isn't a wrapper around the algorithm. It <em>is</em> the product. Companies that invest in UX for the actual end user (not the buyer) win adoption.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--accent3)">
+<h3>2. Explainability Beats Accuracy</h3>
+<p>Fero Labs' entire positioning is built on "white-box ML" — every prediction comes with a full explanation of which factors drove the result. One metallurgist found a nitrogen-quality relationship in minutes that previously took two weeks and three dedicated quality engineers. At Phaidra, the former VP of Customer Success reported that initial operator reaction was fear — "WarGames" comparisons — but the "virtual plant operator as assistant" framing overcame resistance. Imubit solves this with Monte Carlo visualization of learned relationships, so process engineers can see and understand how the model works before trusting it in closed-loop.</p>
+<p style="margin-top:10px"><strong>Lesson:</strong> Industrial operators will never blindly trust a black box. The companies that win show their work — even if the explanation is simplified.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--accent3)">
+<h3>3. Solve the Data Problem First (Or Bypass It)</h3>
+<p>The Phaidra former VP identified dirty data as the #1 implementation bottleneck: "tag mapping, naming conventions that are often gibberish, historical data that isn't flowing well through historians." At Boeing, Archetype required approximately 8 weeks to become fully operational — 4–6 weeks of labeling plus 2 weeks of testing. Augury sidesteps this entirely by deploying its own sensors with pre-trained models — insights within 1 day of install, ROI within 30 days. Cognite makes the data problem its entire business, building the data infrastructure layer that all other AI applications need.</p>
+<p style="margin-top:10px"><strong>Lesson:</strong> Companies that either bring their own clean data pipeline (Augury) or make data cleanup their product (Cognite) deploy faster than those that depend on customer data quality.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--accent3)">
+<h3>4. Sell the Outcome, Not the Technology</h3>
+<p>Phaidra learned this the hard way. The former VP noted that customers drove them to pivot from "energy savings" to "virtual plant operator" messaging. The real value for data centers isn't saving kilowatt-hours — it's stranded power recovery (running more racks with the same energy footprint = more revenue) and reduced downtime. Imubit customers say it bluntly: "We make more money on days we run Imubit than days we don't." EthonAI leads with "$1M+ savings per factory" and "&lt;3 month ROI," not "causal AI" or "graph-based algorithms." Boeing's evaluation of Archetype is framed entirely around machine uptime (worth millions to tens of millions), not AI sophistication.</p>
+<p style="margin-top:10px"><strong>Lesson:</strong> No one buys "reinforcement learning." They buy reduced downtime, increased yield, or recovered capacity. The technology is the how, never the what.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--accent3)">
+<h3>5. Stickiness Comes from Integration Depth, Not Contracts</h3>
+<p>Phaidra's Fusepoint customer rated switching difficulty as "medium" — 6 to 12 months to switch across a portfolio — but the former VP of Customer Success described it as "very sticky" because of the cybersecurity hurdles, constraint definitions, model tweaking, and BMS provider involvement required. Augury's stickiness comes from physical hardware in the walls — hundreds of sensors per site creating a data moat. Imubit's runs on the DCS itself (100% on-prem for control-critical paths), making it structurally embedded. Cognite becomes the data infrastructure layer — ripping it out means losing the contextualized knowledge graph that took months to build.</p>
+<p style="margin-top:10px"><strong>Lesson:</strong> The best moats are operational, not contractual. Embed deeply enough that removing the product would require a parallel implementation project.</p>
+</div>
+
+<div class="card" style="border-left:3px solid var(--accent3)">
+<h3>6. Startup Risk Is a Real Deal-Killer</h3>
+<p>The GSK Senior Director explicitly stated that multiple clients saw clear value in Phaidra POCs but didn't proceed to full deployment because of concerns about startup viability — what happens if the company gets absorbed or fails? This is the invisible headwind for every company on this list. The mitigation strategies vary: Augury raised $361M and partnered with Baker Hughes. EthonAI is sold through Siemens' channel. Imubit has 7 of the top 10 US refiners (credibility through installed base). Archetype's Boeing pilot: positive feedback but the buy decision keeps getting pushed to the right. BrightAI bootstrapped to $100M+ revenue before raising, proving unit economics.</p>
+<p style="margin-top:10px"><strong>Lesson:</strong> For mission-critical industrial deployments, perceived survivability matters as much as product quality. Strategic partnerships, channel agreements, and revenue proof points de-risk the buyer's decision.</p>
+</div>
+
+</div>
+
+<div class="table-wrap">
+<h3>Platform Archetype Analysis — What Works and What Fails</h3>
+<table>
+<thead><tr><th>Pattern</th><th style="color:var(--accent3)">✓ What Works</th><th style="color:var(--accent)">✗ What Fails</th></tr></thead>
+<tbody>
+<tr><td><strong>Control Mode</strong></td><td>Closed-loop autonomy (Phaidra, Imubit) delivers most value but requires trust-building phase. Augury's prescriptive advisory is easiest to adopt.</td><td>Open-loop dashboards that show data but don't prescribe action — operators ignore them within weeks.</td></tr>
+<tr><td><strong>Onboarding</strong></td><td>Augury: insights within 1 day. Imubit: 1-hour training for point-and-click model building. EthonAI Inspector: 20 images to set up new product variant.</td><td>Months of data cleanup, tag mapping, and historian remediation before any value is delivered (common failure mode across the industry).</td></tr>
+<tr><td><strong>Role Differentiation</strong></td><td>Augury has explicit floor tech → plant manager → VP views. Cognite has field worker → engineer → data team workspaces. Imubit: operator → engineer → planner.</td><td>Single-view platforms that show the same interface to everyone — either too complex for operators or too simplistic for engineers.</td></tr>
+<tr><td><strong>Mobile / Field</strong></td><td>Augury's full mobile app. Cognite's field worker mobile interface. BrightAI's wearable copilot with hands-free AR guidance.</td><td>Desktop-only platforms for use cases where the user is physically at the machine (maintenance, inspection, field operations).</td></tr>
+<tr><td><strong>Pricing Model</strong></td><td>Outcome-aligned: per-unit, per-line, or per-site with clear ROI metrics. Phaidra: SaaS + implementation fee. Archetype: per-production-line per year (5 figures per line).</td><td>Enterprise platform licensing that front-loads cost before any demonstrated value.</td></tr>
+<tr><td><strong>Integration</strong></td><td>Imubit: native DCS integration (Honeywell, DeltaV, Foxboro, AspenTech). Phaidra: BMS-agnostic overlay. Cognite: 90+ extractors.</td><td>Peripheral integrations that break when parent systems get hot-fixed (Boeing's current challenge with Archetype).</td></tr>
+<tr><td><strong>Trust Building</strong></td><td>Imubit: operators "duel the AI" as training simulator. Fero Labs: white-box ML with ExplainIt text explanations. Phaidra: red button fallback.</td><td>Black-box recommendations with no explanation of reasoning. Operators will override or ignore systems they can't understand.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="chart-wrap"><h3>ROI Timeline by Platform</h3><div class="chart-sub">Time from deployment to documented positive return on investment</div><div class="chart-container" style="height:320px"><canvas id="chartROI"></canvas></div></div>
+
+<div class="insight">
+<h4>The Expert Interview Verdict on Phaidra's Expansion Potential</h4>
+<p>The GSK Senior Director was skeptical about Phaidra expanding beyond energy management: "70% of Fortune 500 companies are Microsoft shops, so they'd likely use OpenAI models rather than Google's DeepMind-based approach." However, the former VP of Customer Success identified eight potential expansion modules: predictive maintenance, condition-based maintenance, design reviews, water optimization, real-time energy pricing/peak management, stranded power recovery, automated commissioning, and plant operator training (with future LLM integration). The tension between niche excellence and platform expansion is the central strategic question for Phaidra — and mirrors the challenge facing every company in this cohort.</p>
+</div>
+
+<div style="margin:40px 0">
+<div class="section-title" style="font-size:1.4rem">Technology Approach Comparison — The Eight Technical Architectures</div>
+</div>
+
+<div class="chart-wrap"><h3>Core AI Approach by Company</h3><div class="chart-sub">Primary machine learning technique powering each platform</div><div class="chart-container" style="height:360px"><canvas id="chartTech"></canvas></div></div>
+
+<div class="table-wrap">
+<h3>Deep Technology Comparison — Algorithm, Architecture, and Differentiation</h3>
+<table>
+<thead><tr><th>Company</th><th>Core AI Technique</th><th>Key Technical Innovation</th><th>Best For</th><th>Weakness</th></tr></thead>
+<tbody>
+<tr><td><strong>Phaidra</strong></td><td>Deep Reinforcement Learning</td><td>Per-site AI agents trained on specific plant configs. Explores billions of setpoint combinations. Operates within sandboxed constraints (max 0.5°F change per cycle). Writes to BMS without human in loop.</td><td>Autonomous cooling optimization in mission-critical facilities (data centers, pharma, district cooling)</td><td>Narrow vertical focus. Data quality dependency. Slow onboarding (months). Limited to energy/cooling use cases.</td></tr>
+<tr><td><strong>Augury</strong></td><td>Supervised ML on proprietary vibration data</td><td>World's largest mechanical vibration dataset (10+ years, 500M+ hours, 20,000+ pump models). Pre-trained models deploy instantly. Edge-AI in sensor + gateway + cloud (first "AI at every IoT layer"). Insurance-guaranteed diagnostics.</td><td>Predictive/prescriptive maintenance for rotating equipment in manufacturing (CPG, F&B, chemicals)</td><td>Limited to vibration/mechanical health. Doesn't do process optimization. Requires proprietary hardware (sensor lock-in).</td></tr>
+<tr><td><strong>Cognite</strong></td><td>Knowledge graphs + LLM agents</td><td>Industrial Knowledge Graph that contextualizes all IT/OT/ET data. Atlas AI agents for natural-language industrial data queries. 90+ extractors. Open API-first platform. NEAT open-source data modeling.</td><td>Building the data infrastructure layer for any industrial AI deployment. Heavy industry (O&G, energy, manufacturing).</td><td>Not an AI application itself — value depends on what gets built on top. Requires significant data engineering effort. Complex pricing.</td></tr>
+<tr><td><strong>EthonAI</strong></td><td>Causal AI (proprietary Delta algorithm)</td><td>Graph-based causal discovery that models true cause-and-effect (not correlations). 4× better than NOTEARS benchmarks, 10× faster runtime. No-code platform. Transfer learning for CV (20 images).</td><td>Root cause analysis and process optimization in discrete/batch manufacturing (auto, electronics, pharma, food)</td><td>Requires existing data infrastructure (MES, historians). Less proven in continuous process industries. Relatively small team and funding.</td></tr>
+<tr><td><strong>Fero Labs</strong></td><td>White-box ML (proprietary Catalyst AI)</td><td>Full model transparency — every prediction explainable to individual factor contributions. ExplainIt generates natural-language explanations of anomalies in real-time. Auto-retraining. Handles branching production paths (Flexible Optimization).</td><td>Process optimization in steel, chemicals, cement, CPG. Cost reduction and quality control for process engineers/metallurgists.</td><td>Advisory-only (no closed-loop control). Narrower than EthonAI in module breadth. No computer vision capability.</td></tr>
+<tr><td><strong>Imubit</strong></td><td>Deep RL + Foundation Process Model</td><td>Closed-loop neural network controllers (DLPC) that optimize across unit boundaries. Works WITH existing APC. Monte Carlo simulation for transparency. Point-and-click model building. On-prem air-gapped deployment.</td><td>Plant-wide optimization of continuous process operations (refineries, petrochemicals, chemicals). Cross-unit non-linear optimization.</td><td>Highly specialized to hydrocarbon processing. Requires existing DCS infrastructure. Not applicable to discrete manufacturing.</td></tr>
+<tr><td><strong>BrightAI</strong></td><td>Multimodal edge AI + autonomous robotics</td><td>Vertically integrated HW+SW stack. "Stateful Sticker" ultra-low-cost sensors. Autonomous drone inspection. Wearable AI copilot (30-year expert equivalent on day one). Operations knowledge graph. 250K+ endpoints.</td><td>Infrastructure inspection and maintenance (water, power grid, gas, HVAC). Field workforce augmentation.</td><td>Early stage (emerged from stealth 2025). Less proven in manufacturing. Hardware dependency creates deployment complexity.</td></tr>
+<tr><td><strong>Archetype AI</strong></td><td>Foundation model (Newton 2.0B params)</td><td>"Universal Tokens" fuse language + time-series sensor data. Sensor-agnostic (works with any sensor type). One-line edge deployment. Natural-language agent programming. No sensor-specific model training needed.</td><td>Horizontal platform play — any physical AI use case. Best potential for manufacturing environments with diverse sensor types.</td><td>Pilot stage only. Root cause analysis not yet trusted by users (Boeing). Peripheral integrations break on parent system updates. Missing LiDAR/3D capabilities.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="insight">
+<h4>The Closed-Loop vs. Advisory Divide — The Biggest Strategic Choice</h4>
+<p>The eight companies split into two camps: those that autonomously control physical systems (Phaidra, Imubit, BrightAI) and those that advise humans who make decisions (Augury, EthonAI, Fero Labs, Archetype AI, with Cognite as the infrastructure layer). Both can succeed, but they face different challenges. Closed-loop companies deliver more value per deployment but face higher trust barriers and longer sales cycles. The Phaidra former VP noted operators initially feared autonomous control ("WarGames"), and Boeing's evaluation explicitly defers autonomous action to a "2030 timeframe aspiration." Advisory platforms adopt faster but risk becoming noise — Augury solved this by guaranteeing diagnostic accuracy with insurance and achieving 90% engagement. The winning strategy may be Imubit's: start in advisory mode, let operators "duel the AI," then transition to closed-loop once trust is established.</p>
+</div>
+
+<div style="margin:40px 0">
+<div class="section-title" style="font-size:1.4rem">Expert Interview Insights — Unpublished Intelligence</div>
+<p class="section-deck">Key findings from customer and former employee interviews not available through public sources.</p>
+</div>
+
+<div class="grid g2">
+<div class="card">
+<span class="sublabel">Phaidra — From Fusepoint VP (Current Customer)</span>
+<h3>The Real Value Isn't Energy — It's Stranded Power</h3>
+<p>While energy savings are measurable (low single-digit % of a low-hundreds-of-millions USD energy bill = several million USD), the bigger prize is stranded power recovery. By optimizing cooling, operators can safely run additional server racks with the same energy footprint. For colos leasing space, this means more revenue per square foot. For hyperscalers, it's additional compute capacity without building new facilities. The Fusepoint VP sees Phaidra spend growing directly proportional to infrastructure growth — a 20% footprint increase means 20% more Phaidra spend.</p>
+</div>
+<div class="card">
+<span class="sublabel">Phaidra — From GSK Senior Director</span>
+<h3>POC ≠ Deployment (The Startup Risk Gap)</h3>
+<p>A typical Phaidra POC costs under $50,000 and takes 8–12 weeks. Data capture for a big pharma factory adds $100K–$250K over 3–6 months. Full rollout over ~1.5 years totals approximately $500K+. Despite clear ROI (up to 10% energy savings at Merck), multiple GSK/EY clients saw value in POCs but didn't proceed to full deployment because of startup viability concerns. The GSK expert also questioned Phaidra's ability to expand beyond energy: "If they expanded to predictive maintenance, I probably wouldn't use them given our existing Microsoft ecosystem preferences."</p>
+</div>
+<div class="card">
+<span class="sublabel">Phaidra — From Former VP of Customer Success</span>
+<h3>The Merck Implementation: Four Plants, One Brain</h3>
+<p>At Merck's West Point vaccine facility, Phaidra didn't just optimize individual chillers — it optimized across four interconnected chiller plants through a campus loop, shifting load between plants for maximum efficiency. This virtually eliminated pressure and temperature excursions that could affect vaccine production quality. The AI evaluates billions of setpoint combinations every 15 minutes, constrained by business rules (e.g., max 0.5°F chilled water temp change, compressor restart delays). The former VP bought their equity shares upon leaving — a personal financial bet on the company's future.</p>
+</div>
+<div class="card">
+<span class="sublabel">Archetype AI — From Boeing Head of Strategy</span>
+<h3>5–10× More Efficient, But Not Yet Trusted for Debugging</h3>
+<p>Boeing feeds six sensor types into Archetype's Newton model: thermal/infrared, acoustics/ultrasound, accelerometers, torque, environmental, and IMUs. Performance is 5–10× better than internal tools from a computational standpoint, with accuracy at par. But engineers still go to native machine logs for debugging rather than using Archetype's root cause features. Missing capabilities: LiDAR and 3D mapping (limited to 2D), and integrations are "peripheral, not native" — meaning parent system hot-fixes can break connections. Pricing: one production line per year is five figures; 10 lines is six figures. Boeing has ~12 factories + 70+ MRO sites as potential deployment locations.</p>
+</div>
+</div>
+
+<div style="margin:48px 0 24px">
+<div class="section-title" style="font-size:1.4rem">Final Verdict: Platform Scoring Matrix</div>
+</div>
+
+<div class="chart-wrap"><h3>Composite Platform Score</h3><div class="chart-sub">Weighted across product maturity, tech differentiation, market traction, and UX quality</div><div class="chart-container" style="height:380px"><canvas id="chartFinal"></canvas></div></div>
+
+<div class="table-wrap">
+<h3>Summary Scoring — 1 (Weakest) to 5 (Strongest)</h3>
+<table>
+<thead><tr><th>Company</th><th>UX / Adoption</th><th>Tech Depth</th><th>Market Traction</th><th>Integration Ease</th><th>Expansion Potential</th><th>Composite</th></tr></thead>
+<tbody>
+<tr><td><strong>Augury</strong></td><td>★★★★★</td><td>★★★★☆</td><td>★★★★★</td><td>★★★★☆</td><td>★★★☆☆</td><td><strong>4.3</strong></td></tr>
+<tr><td><strong>Imubit</strong></td><td>★★★★☆</td><td>★★★★★</td><td>★★★★★</td><td>★★★★★</td><td>★★★☆☆</td><td><strong>4.3</strong></td></tr>
+<tr><td><strong>Cognite</strong></td><td>★★★★☆</td><td>★★★★☆</td><td>★★★★☆</td><td>★★★★★</td><td>★★★★★</td><td><strong>4.3</strong></td></tr>
+<tr><td><strong>Phaidra</strong></td><td>★★★☆☆</td><td>★★★★★</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★★★☆</td><td><strong>3.8</strong></td></tr>
+<tr><td><strong>EthonAI</strong></td><td>★★★★☆</td><td>★★★★★</td><td>★★★☆☆</td><td>★★★☆☆</td><td>★★★★☆</td><td><strong>3.8</strong></td></tr>
+<tr><td><strong>Fero Labs</strong></td><td>★★★★☆</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★★★☆</td><td>★★★☆☆</td><td><strong>3.6</strong></td></tr>
+<tr><td><strong>BrightAI</strong></td><td>★★★★☆</td><td>★★★★☆</td><td>★★★★☆</td><td>★★★☆☆</td><td>★★★★☆</td><td><strong>3.6</strong></td></tr>
+<tr><td><strong>Archetype AI</strong></td><td>★★☆☆☆</td><td>★★★★★</td><td>★★☆☆☆</td><td>★★☆☆☆</td><td>★★★★★</td><td><strong>3.2</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="insight">
+<h4>The Paradox: Highest-Tech ≠ Highest-Adoption</h4>
+<p>Archetype AI has arguably the most ambitious technology (a 2B-parameter foundation model that generalizes across all sensor types) but the lowest product maturity. Augury's pre-trained vibration models are technically simpler but deliver value within 24 hours. Imubit's RL is comparable in sophistication to Phaidra's, but its 1-hour onboarding and "duel the AI" training approach gets operators to trust it faster. EthonAI's causal AI outperforms standard algorithms on benchmarks, but the Siemens channel partnership may matter more than the Delta algorithm. The pattern: in industrial AI, distribution and usability compound faster than technical superiority.</p>
+</div>
+
+</div>
+</section>
+
+<footer style="padding:48px 0;border-top:2px solid var(--ink);text-align:center">
+<div class="container">
+<p style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)">Physical AI Platform & Technology Deep Dive — February 2026</p>
+<p style="font-size:.8rem;color:var(--ink4);margin-top:8px">Sources: Company websites, product documentation, Azure/AWS Marketplace listings, expert interviews (Fusepoint VP, GSK Senior Director, Former Phaidra VP, Boeing Head of Strategy), GeekWire, BusinessWire, Hydrocarbon Engineering, Sacra, TechStartups, AI Business, SaaSworthy, Cognite Hub, Baker Hughes, LinkedIn.</p>
+</div>
+</footer>
+
+<script>
+Chart.defaults.font.family = "'Source Sans 3', sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = '#888';
+const C = {red:'#c44536',blue:'#2c5f7c',green:'#6b7f3b',purple:'#7c5cfc',orange:'#d4880f',teal:'#2a9d8f',pink:'#e76f8e',slate:'#5a6978'};
+
+// Chart 1: Platform Delivery Model
+new Chart(document.getElementById('chartDelivery'),{type:'bar',data:{labels:['Phaidra','Augury','Cognite','EthonAI','Fero Labs','Imubit','BrightAI','Archetype AI'],datasets:[{label:'Cloud SaaS',data:[70,85,95,90,95,20,40,50],backgroundColor:C.blue},{label:'On-Prem / Edge',data:[30,15,5,10,5,80,60,50],backgroundColor:C.slate}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{stacked:true,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#e0dcd6'}},y:{stacked:true,grid:{display:false}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'rect',padding:16}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw+'%'}}}}});
+
+// Chart 2: Engagement & Time to Value
+new Chart(document.getElementById('chartEngagement'),{type:'scatter',data:{datasets:[{label:'Augury',data:[{x:1,y:90}],backgroundColor:C.green,pointRadius:18,pointHoverRadius:22},{label:'Imubit',data:[{x:14,y:80}],backgroundColor:C.red,pointRadius:16,pointHoverRadius:20},{label:'EthonAI',data:[{x:90,y:75}],backgroundColor:C.purple,pointRadius:12,pointHoverRadius:16},{label:'Fero Labs',data:[{x:30,y:70}],backgroundColor:C.orange,pointRadius:11,pointHoverRadius:15},{label:'Phaidra',data:[{x:180,y:85}],backgroundColor:C.blue,pointRadius:14,pointHoverRadius:18},{label:'Cognite',data:[{x:60,y:65}],backgroundColor:C.teal,pointRadius:13,pointHoverRadius:17},{label:'BrightAI',data:[{x:1,y:70}],backgroundColor:C.pink,pointRadius:12,pointHoverRadius:16},{label:'Archetype AI',data:[{x:56,y:55}],backgroundColor:C.slate,pointRadius:9,pointHoverRadius:13}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Days to First Value →',font:{size:12}},type:'logarithmic',min:0.5,max:365,grid:{color:'#e0dcd6'},ticks:{callback:function(v){const m={1:'1 day',7:'1 wk',14:'2 wk',30:'1 mo',90:'3 mo',180:'6 mo',365:'1 yr'};return m[v]||'';}}},y:{title:{display:true,text:'User Engagement / Satisfaction Score →',font:{size:12}},min:40,max:100,grid:{color:'#e0dcd6'},ticks:{callback:v=>v+'%'}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': '+ctx.raw.x+' days to value, '+ctx.raw.y+'% engagement'}}}}});
+
+// Chart 3: Tech Maturity vs Product Maturity
+new Chart(document.getElementById('chartMaturity'),{type:'scatter',data:{datasets:[{label:'Augury',data:[{x:78,y:92}],backgroundColor:C.green,pointRadius:18,pointHoverRadius:22},{label:'Imubit',data:[{x:88,y:85}],backgroundColor:C.red,pointRadius:16,pointHoverRadius:20},{label:'Cognite',data:[{x:82,y:88}],backgroundColor:C.teal,pointRadius:14,pointHoverRadius:18},{label:'Phaidra',data:[{x:90,y:65}],backgroundColor:C.blue,pointRadius:14,pointHoverRadius:18},{label:'EthonAI',data:[{x:85,y:72}],backgroundColor:C.purple,pointRadius:12,pointHoverRadius:16},{label:'Fero Labs',data:[{x:75,y:70}],backgroundColor:C.orange,pointRadius:11,pointHoverRadius:15},{label:'BrightAI',data:[{x:72,y:68}],backgroundColor:C.pink,pointRadius:13,pointHoverRadius:17},{label:'Archetype AI',data:[{x:92,y:40}],backgroundColor:C.slate,pointRadius:10,pointHoverRadius:14}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Technology Sophistication →',font:{size:12}},min:40,max:100,grid:{color:'#e0dcd6'}},y:{title:{display:true,text:'Product / UX Maturity →',font:{size:12}},min:30,max:100,grid:{color:'#e0dcd6'}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+' — Tech: '+ctx.raw.x+', Product: '+ctx.raw.y}},annotation:{annotations:{line1:{type:'line',xMin:40,xMax:100,yMin:30,yMax:100,borderColor:'rgba(0,0,0,0.08)',borderDash:[6,4]}}}}}});
+
+// Chart 4: ROI Timeline
+new Chart(document.getElementById('chartROI'),{type:'bar',data:{labels:['Augury','EthonAI','Imubit','Fero Labs','BrightAI','Phaidra','Cognite','Archetype AI'],datasets:[{label:'Months to ROI',data:[1,3,3,4,6,12,9,18],backgroundColor:[C.green,C.purple,C.red,C.orange,C.pink,C.blue,C.teal,C.slate],borderRadius:2}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{title:{display:true,text:'Months to Documented Positive ROI →',font:{size:11}},grid:{color:'#e0dcd6'},max:24},y:{grid:{display:false}}},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.raw+' months to ROI'}}}}});
+
+// Chart 5: Core AI Approach
+new Chart(document.getElementById('chartTech'),{type:'radar',data:{labels:['Reinforcement Learning','Supervised ML','Causal AI','Foundation Model','Computer Vision','Edge AI','Knowledge Graphs','LLM Integration'],datasets:[{label:'Phaidra',data:[5,2,1,1,0,3,1,3],borderColor:C.blue,backgroundColor:'rgba(44,95,124,0.08)',pointRadius:3},{label:'Augury',data:[1,5,1,1,2,5,1,1],borderColor:C.green,backgroundColor:'rgba(107,127,59,0.08)',pointRadius:3},{label:'EthonAI',data:[1,3,5,1,5,2,3,4],borderColor:C.purple,backgroundColor:'rgba(124,92,252,0.08)',pointRadius:3},{label:'Imubit',data:[5,3,1,4,0,1,1,1],borderColor:C.red,backgroundColor:'rgba(196,69,54,0.08)',pointRadius:3},{label:'Archetype AI',data:[2,2,1,5,3,5,1,4],borderColor:C.slate,backgroundColor:'rgba(90,105,120,0.08)',pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{beginAtZero:true,max:5,ticks:{stepSize:1,display:false},grid:{color:'#e0dcd6'},pointLabels:{font:{size:10}}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12}}}}});
+
+// Chart 6: Final Composite Score
+new Chart(document.getElementById('chartFinal'),{type:'bar',data:{labels:['Augury','Imubit','Cognite','Phaidra','EthonAI','Fero Labs','BrightAI','Archetype AI'],datasets:[{label:'UX / Adoption',data:[5,4,4,3,4,4,4,2],backgroundColor:C.green},{label:'Tech Depth',data:[4,5,4,5,5,4,4,5],backgroundColor:C.blue},{label:'Market Traction',data:[5,5,4,4,3,3,4,2],backgroundColor:C.orange},{label:'Integration',data:[4,5,5,3,3,4,3,2],backgroundColor:C.teal},{label:'Expansion Potential',data:[3,3,5,4,4,3,4,5],backgroundColor:C.purple}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{grid:{display:false}},y:{max:5.5,grid:{color:'#e0dcd6'},ticks:{stepSize:1}}},plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'rect',padding:14}},tooltip:{mode:'index'}}}});
+</script>
+</body>
+</html>

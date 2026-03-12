@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical AI for Industrial Optimization — Strategic Intelligence Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0c10;--surface:#12151c;--surface2:#1a1e28;--surface3:#222836;--border:#2a3040;--text:#e4e8f0;--text2:#8b95a8;--text3:#5a6478;--accent:#4f8cff;--accent2:#7c5cfc;--green:#34d399;--red:#f87171;--orange:#fb923c;--yellow:#fbbf24;--cyan:#22d3ee;--pink:#f472b6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+.container{max-width:1320px;margin:0 auto;padding:0 40px}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 30% 50%,rgba(79,140,255,.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(124,92,252,.06) 0%,transparent 60%),var(--bg)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;opacity:.15;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%)}
+.hero-content{text-align:center;position:relative;z-index:1;max-width:960px}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,5vw,4.5rem);line-height:1.15;letter-spacing:-.02em;background:linear-gradient(135deg,#fff 0%,#8bb5ff 50%,#c49cff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px}
+.hero .subtitle{font-size:1.15rem;color:var(--text2);max-width:680px;margin:0 auto 40px;font-weight:300}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
+.hero-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px 16px}
+.hero-stat .num{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:500;color:var(--accent);display:block}
+.hero-stat .label{font-size:.8rem;color:var(--text3);margin-top:4px;text-transform:uppercase;letter-spacing:.08em}
+.toc{position:sticky;top:0;z-index:100;background:rgba(10,12,16,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 0}
+.toc-inner{display:flex;gap:6px;overflow-x:auto;padding:0 40px;max-width:1320px;margin:0 auto;scrollbar-width:none}
+.toc-inner::-webkit-scrollbar{display:none}
+.toc a{white-space:nowrap;font-size:.75rem;color:var(--text3);text-decoration:none;padding:6px 14px;border-radius:20px;border:1px solid transparent;transition:all .2s;letter-spacing:.03em;font-weight:500}
+.toc a:hover{color:var(--text);border-color:var(--border);background:var(--surface)}
+section{padding:100px 0;border-bottom:1px solid var(--border)}
+.section-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);font-weight:600;margin-bottom:12px}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(1.8rem,3vw,2.6rem);line-height:1.2;margin-bottom:16px}
+.section-desc{font-size:1rem;color:var(--text2);max-width:720px;margin-bottom:48px;font-weight:300}
+.card-grid{display:grid;gap:20px}
+.card-grid-2{grid-template-columns:repeat(2,1fr)}
+.card-grid-3{grid-template-columns:repeat(3,1fr)}
+.card-grid-4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;transition:border-color .25s,transform .25s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card h3{font-size:1.05rem;font-weight:600;margin-bottom:8px}
+.card p{font-size:.88rem;color:var(--text2);line-height:1.6}
+.card .metric{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--green);display:block;margin-bottom:4px}
+.card .sub-metric{font-size:.78rem;color:var(--text3)}
+.chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;margin-bottom:24px}
+.chart-wrap h3{font-size:.95rem;font-weight:600;margin-bottom:4px}
+.chart-wrap .chart-sub{font-size:.78rem;color:var(--text3);margin-bottom:20px}
+.chart-container{position:relative;width:100%}
+.chart-container canvas{width:100%!important}
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px}
+.table-wrap h3{font-size:.95rem;font-weight:600;padding:20px 24px 12px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+thead{background:var(--surface2)}
+th{text-align:left;padding:12px 16px;font-weight:600;color:var(--text2);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text2)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(79,140,255,.03)}
+.tag{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.7rem;font-weight:600}
+.tag-green{background:rgba(52,211,153,.15);color:var(--green)}
+.tag-blue{background:rgba(79,140,255,.15);color:var(--accent)}
+.tag-orange{background:rgba(251,146,60,.15);color:var(--orange)}
+.tag-red{background:rgba(248,113,113,.15);color:var(--red)}
+.tag-purple{background:rgba(124,92,252,.15);color:var(--accent2)}
+.tag-yellow{background:rgba(251,191,36,.15);color:var(--yellow)}
+.company-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;position:relative;overflow:hidden}
+.company-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.company-card.tier-leader::before{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.company-card.tier-growth::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.company-card.tier-emerging::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}
+.company-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.company-name{font-size:1.1rem;font-weight:700}
+.company-funding{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--green);font-weight:500}
+.company-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.company-desc{font-size:.82rem;color:var(--text2);margin-bottom:12px;line-height:1.6}
+.company-details{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.company-detail{font-size:.78rem}
+.company-detail .dlabel{color:var(--text3)}
+.company-detail .dvalue{color:var(--text);font-weight:500}
+.vertical-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px;margin-bottom:24px}
+.vertical-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.vertical-title{font-size:1.3rem;font-weight:700}
+.vertical-stars{color:var(--yellow);font-size:1rem}
+.vertical-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.v-stat{background:var(--surface2);border-radius:10px;padding:16px;text-align:center}
+.v-stat .num{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:500;color:var(--accent);display:block}
+.v-stat .label{font-size:.7rem;color:var(--text3);margin-top:4px}
+.vertical-body{font-size:.88rem;color:var(--text2);line-height:1.7}
+.vertical-body strong{color:var(--text)}
+.insight{background:linear-gradient(135deg,rgba(79,140,255,.08),rgba(124,92,252,.08));border:1px solid rgba(79,140,255,.2);border-radius:14px;padding:28px;margin:32px 0}
+.insight h4{font-size:1rem;font-weight:600;margin-bottom:8px;color:var(--accent)}
+.insight p{font-size:.88rem;color:var(--text2)}
+.flow{display:flex;gap:4px;align-items:stretch;margin:24px 0}
+.flow-step{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;position:relative}
+.flow-step::after{content:'\2192';position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:1.2rem}
+.flow-step:last-child::after{content:none}
+.flow-step .step-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);display:block;margin-bottom:8px}
+.flow-step h4{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.flow-step p{font-size:.75rem;color:var(--text3)}
+.india-accent{display:inline-flex;gap:3px;margin-right:8px}
+.india-accent span{width:4px;height:16px;border-radius:2px}
+.india-accent span:nth-child(1){background:#FF9933}
+.india-accent span:nth-child(2){background:#fff}
+.india-accent span:nth-child(3){background:#138808}
+@media(max-width:1024px){.hero-stats{grid-template-columns:repeat(2,1fr)}.card-grid-3,.card-grid-4{grid-template-columns:repeat(2,1fr)}.vertical-stats{grid-template-columns:repeat(2,1fr)}.flow{flex-wrap:wrap}.flow-step::after{content:none}}
+@media(max-width:640px){.container{padding:0 20px}.card-grid-2,.card-grid-3,.card-grid-4{grid-template-columns:1fr}.hero-stats{grid-template-columns:1fr 1fr}.company-details{grid-template-columns:1fr}section{padding:60px 0}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <h1>Physical AI for Industrial Optimization</h1>
+    <p class="subtitle">A comprehensive strategic intelligence report for an India-based startup entering the industrial AI market — covering global landscape, India-specific opportunity, competitive dynamics, and market entry strategy.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="num">$5–7B</span><span class="label">Global Market 2024</span></div>
+      <div class="hero-stat"><span class="num">$40–55B</span><span class="label">Projected 2030</span></div>
+      <div class="hero-stat"><span class="num">$298M</span><span class="label">India Market 2024</span></div>
+      <div class="hero-stat"><span class="num">54.7%</span><span class="label">India CAGR</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#market">Market Sizing</a>
+    <a href="#ecosystem">Ecosystem Map</a>
+    <a href="#verticals-global">Global Verticals</a>
+    <a href="#startups">Startup Landscape</a>
+    <a href="#incumbents">Incumbents</a>
+    <a href="#tech">Technology Matrix</a>
+    <a href="#buyers">Buyer Personas</a>
+    <a href="#india-market">India Market</a>
+    <a href="#india-verticals">India Verticals</a>
+    <a href="#india-companies">India Companies</a>
+    <a href="#india-policy">India Policy</a>
+    <a href="#india-roi">India ROI</a>
+    <a href="#india-funding">India Funding</a>
+    <a href="#india-gtm">India GTM</a>
+    <a href="#strategy">Strategy</a>
+    <a href="index.html" style="color:var(--accent);border:1px solid var(--accent);border-radius:20px;">← Main Report</a>
+  </div>
+</nav>
+
+<!-- 1. GLOBAL MARKET SIZING -->
+<section id="market">
+  <div class="container">
+    <div class="section-label">01 — Market Sizing</div>
+    <div class="section-title">A $5–7B market racing toward $55B</div>
+    <p class="section-desc">The Physical AI ecosystem sits at the intersection of several overlapping markets. Understanding their boundaries is essential for strategic planning and investor communication.</p>
+    <div class="card-grid card-grid-2" style="margin-bottom:32px">
+      <div class="chart-wrap"><h3>Global AI in Manufacturing — Market Growth</h3><div class="chart-sub">2024 actual vs. 2030 projected ($ billions)</div><div class="chart-container" style="height:340px"><canvas id="chartMarketGrowth"></canvas></div></div>
+      <div class="chart-wrap"><h3>CAGR by Segment (2024–2030)</h3><div class="chart-sub">Compound annual growth rates</div><div class="chart-container" style="height:340px"><canvas id="chartCAGR"></canvas></div></div>
+    </div>
+    <div class="table-wrap">
+      <h3>Market Size at a Glance</h3>
+      <table>
+        <thead><tr><th>Segment</th><th>2024 Size</th><th>2030 Forecast</th><th>CAGR</th><th>Key Insight</th></tr></thead>
+        <tbody>
+          <tr><td>Smart Manufacturing (Industry 4.0)</td><td>$340–360B</td><td>$700–790B</td><td><span class="tag tag-blue">12–16%</span></td><td>Broadest context; includes all digitalization</td></tr>
+          <tr><td>Industrial Automation</td><td>$200–227B</td><td>$378–408B</td><td><span class="tag tag-blue">9–11%</span></td><td>Hardware + software; PLCs, DCS, SCADA</td></tr>
+          <tr><td>AI in Manufacturing (SW + Services)</td><td>$5–7B</td><td>$40–55B</td><td><span class="tag tag-green">31–47%</span></td><td>Core addressable market for AI startups</td></tr>
+          <tr><td>Predictive Maintenance</td><td>$10–14B</td><td>$42–64B</td><td><span class="tag tag-green">25–35%</span></td><td>Most commercially mature AI application</td></tr>
+          <tr><td>Digital Twins (All Industries)</td><td>$14–25B</td><td>$125–156B</td><td><span class="tag tag-green">34–48%</span></td><td>Highest projected growth rate</td></tr>
+          <tr><td>AI in Energy Optimization</td><td>$9–11B</td><td>$23–59B</td><td><span class="tag tag-green">25–37%</span></td><td>Energy price volatility drives urgency</td></tr>
+          <tr><td>Physical AI (Embodied)</td><td>$4–5B</td><td>$50–69B</td><td><span class="tag tag-green">31–34%</span></td><td>Nascent; robotics + autonomous systems</td></tr>
+          <tr><td><strong>India AI in Manufacturing</strong></td><td><strong>$298M</strong></td><td><strong>$3.75B</strong></td><td><span class="tag tag-purple">54.7%</span></td><td>Outpacing global growth by 8+ pts</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-wrap">
+      <h3>Geographic Market Share Distribution (2024)</h3>
+      <div class="chart-sub">Asia-Pacific leads in growth rate; North America in adoption maturity</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div class="chart-container" style="height:280px"><canvas id="chartGeo"></canvas></div>
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:16px;font-size:.88rem">
+          <div><strong style="color:var(--accent)">North America (30–36%)</strong><br><span style="color:var(--text2)">Leads adoption maturity. Hyperscaler AI infra + CHIPS Act. US alone = $47B+ AI spend.</span></div>
+          <div><strong style="color:var(--green)">Asia-Pacific (30–37%)</strong><br><span style="color:var(--text2)">Fastest growth 15–24% CAGR. China state-backed; Japan robotics; India emerging fast.</span></div>
+          <div><strong style="color:var(--accent2)">Europe (25–33%)</strong><br><span style="color:var(--text2)">Strongest regulatory drivers (EU AI Act, ETS carbon pricing). Lags NA by ~30% in GenAI.</span></div>
+          <div><strong style="color:var(--orange)">Middle East (&lt;5%)</strong><br><span style="color:var(--text2)">Emerging rapidly. Saudi Project Transcendence = $100B. Aramco METABRAIN reducing outages 30%.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="insight">
+      <h4>💡 Critical Insight: Industrial AI Spending = 0.1% of Manufacturing Revenue</h4>
+      <p>Even modest penetration gains translate to billions in new addressable revenue. 70% of AI value concentrates in core operations — manufacturing, maintenance, and supply chain. The SCADA gap (under 5% of global MES/SCADA installations have any AI layer) represents the single largest greenfield software opportunity since enterprise cloud adoption.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ECOSYSTEM MAP -->
+<section id="ecosystem">
+  <div class="container">
+    <div class="section-label">02 — Ecosystem Map</div>
+    <div class="section-title">A four-layer competitive architecture</div>
+    <p class="section-desc">The Physical AI ecosystem is structured across four layers with distinct competitive dynamics, value capture potential, and strategic implications.</p>
+    <div class="card-grid card-grid-4">
+      <div class="card" style="border-top:3px solid var(--red)"><h3>Layer 1: Incumbents</h3><span class="metric" style="font-size:1.2rem;color:var(--red)">$60B+</span><span class="sub-metric">AI acquisitions since 2020</span><p style="margin-top:12px">Siemens, Schneider/AVEVA, Honeywell, ABB, Rockwell, Emerson/AspenTech. Control installed base of PLCs, DCS, SCADA, MES. Their moat is data access, not technology. OSIsoft PI historian is in ~65% of industrial facilities.</p></div>
+      <div class="card" style="border-top:3px solid var(--accent)"><h3>Layer 2: AI-Native Startups</h3><span class="metric" style="font-size:1.2rem;color:var(--accent)">$1B+</span><span class="sub-metric">Total funding raised</span><p style="margin-top:12px">Phaidra, Augury, EthonAI, Archetype AI, BrightAI, Cognite, Fero Labs, Imubit. Novel architectures: deep RL, causal AI, foundation models. Attack from the optimization layer between data and control.</p></div>
+      <div class="card" style="border-top:3px solid var(--green)"><h3>Layer 3: Hyperscalers</h3><span class="metric" style="font-size:1.2rem;color:var(--green)">Azure</span><span class="sub-metric">Dominant industrial cloud</span><p style="margin-top:12px">Microsoft Azure partners with 4 of 6 major incumbents. AWS aggressively challenging via Rockwell partnership (Hannover 2025). Google Cloud pursuing AI-first niche via Honeywell + Gemini on Vertex AI.</p></div>
+      <div class="card" style="border-top:3px solid var(--orange)"><h3>Layer 4: Integrators</h3><span class="metric" style="font-size:1.2rem;color:var(--orange)">30%+</span><span class="sub-metric">Of project value captured</span><p style="margin-top:12px">Accenture ($3B AI investment, 80K AI professionals), Deloitte, Capgemini, TCS ($4.5B mfg revenue), Infosys ($3.1B). Influence vendor selection — frequently underestimated by startups.</p></div>
+    </div>
+    <div class="chart-wrap" style="margin-top:24px">
+      <h3>Incumbent M&A Activity — $60B+ Since 2020</h3>
+      <div class="chart-sub">The window for AI-native startup positioning is narrowing as incumbents absorb the value layer</div>
+      <div class="chart-container" style="height:300px"><canvas id="chartMA"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. GLOBAL VERTICALS -->
+<section id="verticals-global">
+  <div class="container">
+    <div class="section-label">03 — Global Vertical Deep Dive</div>
+    <div class="section-title">Which industries adopt fastest and pay most</div>
+    <p class="section-desc">Verticals ranked by adoption maturity, measurable ROI, contract value, and strategic attractiveness for a new entrant.</p>
+    <div class="chart-wrap">
+      <h3>Vertical Attractiveness Scorecard</h3>
+      <div class="chart-sub">Bubble size = average contract value; X = adoption maturity; Y = strategic attractiveness</div>
+      <div class="chart-container" style="height:400px"><canvas id="chartVerticals"></canvas></div>
+    </div>
+    <div class="table-wrap">
+      <h3>Vertical Comparison Matrix</h3>
+      <table>
+        <thead><tr><th>Vertical</th><th>Stage</th><th>Contract Value</th><th>Sales Cycle</th><th>Energy % COGS</th><th>Proven AI Savings</th><th>Rating</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Data Centers</strong></td><td><span class="tag tag-green">Scaling</span></td><td>$200K–$2M</td><td>6–12 mo</td><td>40–60%</td><td>15–40% energy reduction</td><td>★★★★★</td></tr>
+          <tr><td><strong>Oil & Gas Refining</strong></td><td><span class="tag tag-green">Scaling</span></td><td>$500K–$5M+</td><td>9–18 mo</td><td>50–60%</td><td>35–45% downtime reduction</td><td>★★★★☆</td></tr>
+          <tr><td><strong>Chemicals / Cement / Steel</strong></td><td><span class="tag tag-blue">Early Scaling</span></td><td>$200K–$5M</td><td>6–18 mo</td><td>20–50%</td><td>1–10% fuel savings; 80% scrap ↓</td><td>★★★★☆</td></tr>
+          <tr><td><strong>Pharmaceuticals</strong></td><td><span class="tag tag-blue">Early Scaling</span></td><td>$300K–$3M</td><td>9–18 mo</td><td>8–15%</td><td>26–90% productivity ↑</td><td>★★★★☆</td></tr>
+          <tr><td><strong>Advanced Manufacturing</strong></td><td><span class="tag tag-green">Scaling</span></td><td>$500K–$6.5M</td><td>12–24 mo</td><td>5–15%</td><td>15–30% OEE improvement</td><td>★★★☆☆</td></tr>
+          <tr><td><strong>Food & Beverage</strong></td><td><span class="tag tag-blue">Early Scaling</span></td><td>$50K–$5M</td><td>3–12 mo</td><td>10–25%</td><td>$50M+ waste reduction</td><td>★★★★☆</td></tr>
+          <tr><td><strong>Power & Energy</strong></td><td><span class="tag tag-blue">Early Scaling</span></td><td>$500K–$5M</td><td>12–24 mo</td><td>Fuel = product</td><td>35% outage ↓; 8% energy ↓</td><td>★★★☆☆</td></tr>
+          <tr><td><strong>Automotive</strong></td><td><span class="tag tag-green">Scaling</span></td><td>$200K–$3M</td><td>9–18 mo</td><td>5–10%</td><td>18% first-pass yield ↑</td><td>★★★☆☆</td></tr>
+          <tr><td><strong>Logistics / Warehousing</strong></td><td><span class="tag tag-green">Scaling</span></td><td>$50K–$500K</td><td>3–9 mo</td><td>15–25%</td><td>38M liters fuel saved (UPS)</td><td>★★★☆☆</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Detailed vertical write-ups -->
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">🖥️ Data Centers — The Standout Vertical</div><div class="vertical-stars">★★★★★</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">~20%</span><span class="label">Annual power capacity growth</span></div>
+        <div class="v-stat"><span class="num">$70M</span><span class="label">Annual energy spend / 100MW</span></div>
+        <div class="v-stat"><span class="num">$7M</span><span class="label">Annual savings from 10% AI</span></div>
+        <div class="v-stat"><span class="num">$20.8B</span><span class="label">Cooling market size</span></div>
+      </div>
+      <div class="vertical-body">
+        <p>Google DeepMind's pioneering work demonstrated <strong>40% reduction in cooling energy</strong> and <strong>15% reduction in overall PUE overhead</strong>. Phaidra (founded by DeepMind alumni) reports <strong>10–30% energy efficiency improvements</strong> at commercial deployments with thermal overshoot reduced from 3–5°C spikes to under 0.5°C at a 100MW GPU cluster. Economics: a 100MW facility at $0.08/kWh spends $70M/year on energy — a 10% improvement = $7M savings with a 5-year NPV of $28M at 8% discount rate. Budget decisions sit with VP of Data Center Operations; CFO sign-off achievable via sub-12-month payback.</p>
+      </div>
+    </div>
+
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">⛽ Oil & Gas — Highest Absolute Savings</div><div class="vertical-stars">★★★★☆</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">$500K</span><span class="label">Cost per hour of downtime</span></div>
+        <div class="v-stat"><span class="num">~$2B/yr</span><span class="label">Shell's estimated AI savings</span></div>
+        <div class="v-stat"><span class="num">98%</span><span class="label">Shell uptime (from 93%)</span></div>
+        <div class="v-stat"><span class="num">$4–7B</span><span class="label">AI in O&G market 2025</span></div>
+      </div>
+      <div class="vertical-body">
+        <p><strong>Shell</strong> monitors 10,000+ equipment items using AI with 15 million predictions daily, achieving <strong>35–45% reduction in unplanned downtime</strong> and an uptime improvement from 93% to 98%. A single prevented hour of downtime at a refinery saves approximately $500K. The AI in oil and gas market is $4–7B in 2025, projected to $15–25B by 2034. Contract values run $500K–$5M+ ACV with 9–18 month sales cycles. Integration complexity is high (DCS, SCADA, PI historians, CMMS) but massive ROI justifies it. Aramco's METABRAIN LLM has reduced unplanned outages by ~30%.</p>
+      </div>
+    </div>
+
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">🏭 Process Industries — Deep Domain = Deep Moats</div><div class="vertical-stars">★★★★☆</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">8%</span><span class="label">Global CO₂ from cement</span></div>
+        <div class="v-stat"><span class="num">&lt;0.15%</span><span class="label">AI penetration in cement</span></div>
+        <div class="v-stat"><span class="num">$15M/yr</span><span class="label">Savings on $500M plant</span></div>
+        <div class="v-stat"><span class="num">$120M</span><span class="label">Enterprise value created</span></div>
+      </div>
+      <div class="vertical-body">
+        <p>Chemicals, cement, and steel manufacturing offer extraordinary optimization opportunities. Cement production (8% of global CO₂) sees AI kiln optimization delivering <strong>1–10% fuel savings</strong> against an industry where calcination is 50% of cost. The global cement market exceeds $384B, yet AI optimization is only $650–754M — under 0.15% penetration. Chemical plants: a $500M-revenue plant with 30% energy cost ($150M) achieves <strong>$15M annual savings from 10% AI improvement</strong>, lifting EBITDA from 15% to 18% and creating $120M in enterprise value at 8x multiple. EthonAI's causal AI achieves <strong>up to 80% scrap reduction</strong> with under 3-month ROI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. GLOBAL STARTUP LANDSCAPE -->
+<section id="startups">
+  <div class="container">
+    <div class="section-label">04 — Global Startup Landscape</div>
+    <div class="section-title">Who's building what — and who's winning</div>
+    <p class="section-desc">The AI-native startup landscape has stratified into four archetypes: autonomous control specialists, manufacturing analytics platforms, Physical AI foundation model builders, and full-stack infrastructure AI.</p>
+    <div class="chart-wrap"><h3>Global Industrial AI Startup Funding</h3><div class="chart-sub">Total funding raised ($ millions)</div><div class="chart-container" style="height:350px"><canvas id="chartStartupFunding"></canvas></div></div>
+    <div class="card-grid card-grid-2" style="margin-top:24px">
+      <div class="company-card tier-leader">
+        <div class="company-header"><span class="company-name">Augury</span><span class="company-funding">$361M raised</span></div>
+        <div class="company-meta"><span class="tag tag-green">Unicorn</span><span class="tag tag-blue">~$100M ARR</span><span class="tag tag-purple">IPO Track</span></div>
+        <div class="company-desc">Machine health + process optimization. Largest mechanical sensor dataset globally — 500M+ hours across 20K+ pump models. Serves PepsiCo, Nestlé, DuPont, Colgate-Palmolive. Full-stack: proprietary sensors + ML platform + prescriptive analytics.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">Archetype: </span><span class="dvalue">Full-stack infrastructure AI</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Vibration analytics + ML</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">F&B, CPG, Chemicals</span></div>
+          <div class="company-detail"><span class="dlabel">Moat: </span><span class="dvalue">Proprietary sensor data flywheel</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-leader">
+        <div class="company-header"><span class="company-name">Cognite</span><span class="company-funding">$170M+ revenue</span></div>
+        <div class="company-meta"><span class="tag tag-green">Pre-IPO</span><span class="tag tag-blue">Data Platform</span></div>
+        <div class="company-desc">Industrial data platform (Cognite Data Fusion) that contextualizes OT + IT data. Planning US IPO at $2–4B+ valuation. Serves BP, Aker, Saudi Aramco, Celanese. Enables other AI apps to sit on top of unified data layer.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">Archetype: </span><span class="dvalue">Industrial data infrastructure</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Knowledge graph + data fusion</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">O&G, Energy, Chemicals</span></div>
+          <div class="company-detail"><span class="dlabel">Moat: </span><span class="dvalue">Data layer lock-in + graph DB</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-leader">
+        <div class="company-header"><span class="company-name">Phaidra</span><span class="company-funding">$110M+ raised</span></div>
+        <div class="company-meta"><span class="tag tag-purple">DeepMind Alumni</span><span class="tag tag-blue">Series B (Oct 2025)</span></div>
+        <div class="company-desc">Deep RL for autonomous industrial cooling + HVAC. Founded by the team that built Google DeepMind's data center cooling AI. Delivers 10–30% energy savings without hardware replacement. Deployed at Merck's 500-acre vaccine plant. NVIDIA investor in Series B.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">Archetype: </span><span class="dvalue">Autonomous control specialist</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Deep reinforcement learning</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">Data Centers, Pharma, Industrial</span></div>
+          <div class="company-detail"><span class="dlabel">Moat: </span><span class="dvalue">RL agents continuously self-improve</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-growth">
+        <div class="company-header"><span class="company-name">BrightAI</span><span class="company-funding">$78M raised</span></div>
+        <div class="company-meta"><span class="tag tag-green">$80M Revenue</span><span class="tag tag-blue">Khosla Ventures</span></div>
+        <div class="company-desc">"Stateful OS" platform with proprietary sensors, wearables, drones across 50,000+ locations for water, power, HVAC. Achieved $80M revenue largely while bootstrapped — rare signal of strong product-market fit.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">Archetype: </span><span class="dvalue">Full-stack infrastructure AI</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Sensor fusion + edge AI</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">Water, Power, HVAC, Facilities</span></div>
+          <div class="company-detail"><span class="dlabel">Moat: </span><span class="dvalue">Proprietary hardware + 50K sites</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-growth">
+        <div class="company-header"><span class="company-name">Archetype AI</span><span class="company-funding">$48M raised</span></div>
+        <div class="company-meta"><span class="tag tag-orange">Foundation Model</span><span class="tag tag-purple">Bezos Expeditions</span></div>
+        <div class="company-desc">Building "Newton" — 2.0B-parameter multimodal model fusing sensor data with natural language via "Universal Tokens." Outperformed specialized AI in power forecasting + transformer temperature prediction. Highest technical risk but potentially enormous TAM.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">Archetype: </span><span class="dvalue">Physical AI foundation model</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">2B-param multimodal transformer</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">Horizontal (any physical system)</span></div>
+          <div class="company-detail"><span class="dlabel">Risk: </span><span class="dvalue">High execution; huge TAM if proven</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-growth">
+        <div class="company-header"><span class="company-name">EthonAI</span><span class="company-funding">$24.5M raised</span></div>
+        <div class="company-meta"><span class="tag tag-blue">Causal AI</span><span class="tag tag-green">Index + General Catalyst</span></div>
+        <div class="company-desc">Causal AI for manufacturing quality — models cause-and-effect, not just correlation. Up to 80% scrap reduction, $1M+ savings per factory, under 3-month ROI. 100% defect detection across 150K inspections at Siemens Rastatt. Customers: Lindt, Siemens.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">Archetype: </span><span class="dvalue">Manufacturing analytics</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Causal inference + explainable AI</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">Discrete mfg, Electronics, F&B</span></div>
+          <div class="company-detail"><span class="dlabel">Moat: </span><span class="dvalue">Root cause identification (not just correlation)</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. INCUMBENT ANALYSIS -->
+<section id="incumbents">
+  <div class="container">
+    <div class="section-label">05 — Incumbent Entrenchment</div>
+    <div class="section-title">Five strategies incumbents use to absorb AI value</div>
+    <p class="section-desc">The six major incumbents have spent $60B+ on AI acquisitions and are executing coordinated strategies. Understanding these moats is essential for positioning.</p>
+    <div class="card-grid card-grid-3">
+      <div class="card"><h3>🔒 Embedding AI in Hardware</h3><p>Siemens Industrial Copilot within TIA Portal; Emerson DeltaV uses AI for 70% automated migration config. When AI is free with hardware, startups must justify standalone cost.</p></div>
+      <div class="card"><h3>📊 Controlling Data Access</h3><p>OSIsoft PI installed in ~65% of industrial facilities. Siemens PROFINET creates switching costs. AspenTech's process library spans 40+ years. Incumbents have native data access; startups face integration barriers.</p></div>
+      <div class="card"><h3>🏪 Marketplace Platforms</h3><p>Siemens Xcelerator, Rockwell PartnerNetwork, Schneider Exchange. Third-party AI runs within their environment. App store dynamics capture the platform layer while controlling distribution.</p></div>
+      <div class="card"><h3>🏦 Aggressive M&A ($60B+)</h3><p>Siemens/Altair ($10B), Emerson/AspenTech ($16.8B), Schneider/AVEVA ($11B), Rockwell/Plex ($2.2B), Emerson/NI ($8.2B), Schneider India JV ($6.4B). Removes startup acquisition targets; creates integrated bundles.</p></div>
+      <div class="card"><h3>💳 SaaS Bundling</h3><p>All transitioning to subscription + bundling AI into existing contracts. When AI becomes a "free" add-on to existing spend, it kills startup pricing power. Siemens Industrial Copilot: 100+ companies evaluating.</p></div>
+      <div class="card" style="border:1px solid var(--accent);background:rgba(79,140,255,.03)"><h3>⚡ The Critical Vulnerability</h3><p><strong>They are controls vendors adding AI, not AI companies adding industrial expertise.</strong> Their AI is bolt-on, not architecturally native. RL, causal AI, and foundation models can outperform bolt-on solutions on the metrics that matter. The window for this advantage is narrowing.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. TECHNOLOGY MATRIX -->
+<section id="tech">
+  <div class="container">
+    <div class="section-label">06 — Technology Differentiation</div>
+    <div class="section-title">Nine approaches competing for the optimization layer</div>
+    <div class="chart-wrap"><h3>Technology Maturity vs. Value Ceiling</h3><div class="chart-sub">Higher = greater savings potential; further right = more commercially proven</div><div class="chart-container" style="height:380px"><canvas id="chartTechMatrix"></canvas></div></div>
+    <div class="table-wrap">
+      <h3>Technology Comparison</h3>
+      <table>
+        <thead><tr><th>Approach</th><th>Maturity</th><th>Proven Savings</th><th>Data Needs</th><th>Best For</th><th>Key Players</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Predictive Maintenance</strong></td><td><span class="tag tag-green">Mature</span></td><td>30% downtime ↓, 40% cost ↓</td><td>Medium</td><td>Rotating equipment</td><td>Augury, Infinite Uptime</td></tr>
+          <tr><td><strong>RL Autonomous Control</strong></td><td><span class="tag tag-blue">Growth</span></td><td>15–40% energy ↓</td><td>High</td><td>HVAC, cooling, chemical</td><td>Phaidra, Imubit, DeepMind</td></tr>
+          <tr><td><strong>Causal AI</strong></td><td><span class="tag tag-blue">Growth</span></td><td>80% scrap ↓, $1M+/factory</td><td>Medium</td><td>Root cause analysis</td><td>EthonAI, Fero Labs</td></tr>
+          <tr><td><strong>Physics-Informed NNs</strong></td><td><span class="tag tag-orange">Emerging</span></td><td>5–15% efficiency ↑</td><td>Low (50 pts)</td><td>Pharma, specialty chem</td><td>Basetwo, research labs</td></tr>
+          <tr><td><strong>Foundation Models</strong></td><td><span class="tag tag-orange">Emerging</span></td><td>TBD (early validation)</td><td>Low-Med</td><td>Horizontal sensor AI</td><td>Archetype AI (Newton)</td></tr>
+          <tr><td><strong>Computer Vision</strong></td><td><span class="tag tag-green">Mature</span></td><td>281% ROI yr 1; 99% acc</td><td>Medium</td><td>Defect detection</td><td>Landing AI, Ripik AI</td></tr>
+          <tr><td><strong>Digital Twins</strong></td><td><span class="tag tag-blue">Growth</span></td><td>10–25% throughput ↑</td><td>Very High</td><td>Complex process sim</td><td>Siemens, AspenTech</td></tr>
+          <tr><td><strong>Industrial LLMs</strong></td><td><span class="tag tag-blue">Growth</span></td><td>Productivity (not direct $)</td><td>Low</td><td>Workforce augmentation</td><td>Siemens Industrial Copilot</td></tr>
+          <tr><td><strong>Edge AI / Sensor Fusion</strong></td><td><span class="tag tag-green">Mature</span></td><td>Real-time anomaly detect</td><td>High</td><td>Remote / distributed</td><td>BrightAI, Detect Tech</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 7. BUYER PERSONAS -->
+<section id="buyers">
+  <div class="container">
+    <div class="section-label">07 — Buyer Personas</div>
+    <div class="section-title">Deal velocity depends on who leads the purchase</div>
+    <div class="chart-wrap"><h3>Buyer Persona Authority vs. Deal Velocity</h3><div class="chart-sub">Y = budget authority; X = deal speed; bubble size = influence on adoption</div><div class="chart-container" style="height:350px"><canvas id="chartBuyers"></canvas></div></div>
+    <div class="card-grid card-grid-3">
+      <div class="card"><h3>Plant Manager</h3><p style="margin-bottom:8px"><span class="tag tag-blue">$50K–$500K authority</span></p><p><strong>Pain:</strong> OEE, downtime, throughput. Risk-averse; need peer facility proof. <strong>Cycle:</strong> 6–12 months. Most common blocker — but strongest champion once convinced. Lead with comparable facility case studies.</p></div>
+      <div class="card"><h3>Process Engineer</h3><p style="margin-bottom:8px"><span class="tag tag-green">$10K–$100K (critical influencer)</span></p><p><strong>Pain:</strong> Yield, quality, energy per unit. Technically curious but skeptical of generic ML. <strong>Cycle:</strong> 3–9 months. Single most important persona for bottom-up adoption. Needs tools with domain knowledge, not black boxes.</p></div>
+      <div class="card"><h3>VP Operations</h3><p style="margin-bottom:8px"><span class="tag tag-purple">$500K–$5M+ authority</span></p><p><strong>Pain:</strong> Multi-site consistency, workforce gaps, sustainability targets. <strong>Cycle:</strong> 9–18 months. ~70% of IIoT stuck in "pilot purgatory" — most frustrated by this. Lead with enterprise-scale transformation evidence.</p></div>
+      <div class="card"><h3>CTO / CDO</h3><p style="margin-bottom:8px"><span class="tag tag-orange">$1M–$10M+ authority</span></p><p><strong>Pain:</strong> Build vs. buy dilemma. Integration across legacy OT networks. Answer is hybrid. OPC UA and MQTT compliance are table stakes. <strong>Cycle:</strong> 6–18 months.</p></div>
+      <div class="card"><h3>CFO</h3><p style="margin-bottom:8px"><span class="tag tag-red">Final approval</span></p><p>Only 29% measure AI ROI confidently. "Cost of inaction" framing works best. Prefers OpEx/SaaS + outcome-based pricing. Best-in-class: 300% ROI in year one on critical assets.</p></div>
+      <div class="card" style="background:rgba(79,140,255,.05);border-color:var(--accent)"><h3>🎯 Optimal Sales Motion</h3><p>Bottom-up: Process Engineer champion ($50K–$200K pilot) → 3–6 month results → VP Ops multi-site expansion → CTO/CFO enterprise deal. Only ~5% of enterprise AI projects scale to production. Data quality determines 58% of success.</p></div>
+    </div>
+    <div class="insight">
+      <h4>💼 Jobs-to-be-Done Framework for Industrial AI</h4>
+      <p><strong>1.</strong> "Keep my line running" → Predictive maintenance (most mature). <strong>2.</strong> "Find out why quality dropped" → Causal AI, root cause analysis (growing fast). <strong>3.</strong> "Run my process more efficiently" → RL control, digital twins (highest ceiling). <strong>4.</strong> "Make sense of all this data" → Foundation models, LLM copilots (emerging). <strong>5.</strong> "Upskill my workforce" → Digital twin training (rising urgency as boomers retire). <strong>6.</strong> "Prove value to leadership" → ROI dashboards, outcome-based pricing (essential enabler).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. INDIA MARKET OVERVIEW -->
+<section id="india-market">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>08 — India Market Overview</div>
+    <div class="section-title">$298M → $3.75B at 54.7% CAGR</div>
+    <p class="section-desc">India's combination of being the 5th-largest manufacturer globally, running some of the most energy-intensive heavy industries, and rolling out $26B in production-linked incentives creates a massive demand wedge for Physical AI.</p>
+    <div class="card-grid card-grid-4" style="margin-bottom:32px">
+      <div class="card"><span class="metric">$475B+</span><span class="sub-metric">Manufacturing output</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">12.5–17.3% of GDP. Target 25% by 2030. 18.5M employed.</p></div>
+      <div class="card"><span class="metric">200,000+</span><span class="sub-metric">Registered factories</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">Plus millions of MSME units. $19B manufacturing FDI (FY25, +18% YoY).</p></div>
+      <div class="card"><span class="metric">&lt;15%</span><span class="sub-metric">Factories with MES</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">Large process: 70–90% SCADA. Mid-market: 30–50%. MSMEs: &lt;15%.</p></div>
+      <div class="card"><span class="metric">59%</span><span class="sub-metric">Enterprise AI deployed</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">Highest globally (IBM) — but concentrated in top firms. NASSCOM Index: 2.47/4.0.</p></div>
+    </div>
+    <div class="card-grid card-grid-2">
+      <div class="chart-wrap"><h3>India AI in Manufacturing — Growth Trajectory</h3><div class="chart-sub">$ millions, 2024–2030 projected at 54.7% CAGR</div><div class="chart-container" style="height:300px"><canvas id="chartIndiaGrowth"></canvas></div></div>
+      <div class="chart-wrap"><h3>India Digitalization Maturity by Layer</h3><div class="chart-sub">% of factories with implementation — reveals the greenfield gap</div><div class="chart-container" style="height:300px"><canvas id="chartIndiaMaturity"></canvas></div></div>
+    </div>
+    <div class="insight">
+      <h4>🇮🇳 India's Structural Advantage: The 8–10× Talent Arbitrage</h4>
+      <p>Median AI engineer salary: $13.8K (India) vs. $147K (US). AI talent pool ~420,000, projected 1.25M by 2027. Critical bottleneck: industrial domain experts with AI skills — process engineers who understand blast furnace operations or kiln chemistry AND can work with AI systems remain extremely scarce. This hybrid talent is the real competitive moat.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9. INDIA VERTICALS -->
+<section id="india-verticals">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>09 — India Vertical Deep Dive</div>
+    <div class="section-title">Where the $3.75B opportunity sits — company by company</div>
+    <div class="chart-wrap"><h3>India Verticals — Sector Size vs. AI Opportunity Score</h3><div class="chart-sub">Left axis: sector market size ($B); Right axis: AI addressability score (1–10)</div><div class="chart-container" style="height:400px"><canvas id="chartIndiaVerticals"></canvas></div></div>
+
+    <!-- Steel -->
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">🏗️ Steel & Metals — India's #1 AI Opportunity</div><div class="vertical-stars">★★★★★</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">152 MT</span><span class="label">FY25 Production (2nd globally)</span></div>
+        <div class="v-stat"><span class="num">300 MT</span><span class="label">2030 Capacity Target</span></div>
+        <div class="v-stat"><span class="num">20–30%</span><span class="label">Energy as % of Cost</span></div>
+        <div class="v-stat"><span class="num">2.55 tCO₂</span><span class="label">Per tonne (38% above global)</span></div>
+      </div>
+      <div class="vertical-body">
+        <p><strong>Tata Steel</strong> — the undisputed AI leader. <strong>550+ AI models deployed</strong> across the value chain, generating <strong>$1.4 billion in cumulative savings</strong> at a 1:10 cost-benefit ratio. Their Jamshedpur and Kalinganagar plants hold WEF Lighthouse status. Predictive maintenance alone saves ₹40 crore/year and cuts unplanned downtime by 50%. Uses AVEVA PI System as data backbone. Has built a dedicated AI unit and is developing an AI-powered marketplace for the steel ecosystem.</p>
+        <p style="margin-top:12px"><strong>JSW Steel</strong> — operates smart factories with thousands of embedded sensors. Completed <strong>565 high-impact digital projects in FY2024-25</strong>. Investing heavily in digital twins for process optimization. Working toward Industry 4.0 maturity across all plants.</p>
+        <p style="margin-top:12px"><strong>SAIL</strong> — signed a comprehensive <strong>digital twin agreement with ABB</strong> covering multiple plants in their modernization push. Represents India's largest single-entity digital transformation in public sector steel.</p>
+        <p style="margin-top:12px"><strong>Jindal Stainless</strong> — launched <strong>"Project Pragati" with Dassault Systèmes</strong> for end-to-end supply chain digitalization. Focus on production planning and quality optimization.</p>
+        <p style="margin-top:12px"><strong>Opportunity:</strong> The target of 300 MTPA by 2030 (nearly doubling current 179.5 MTPA installed) will drive demand for both greenfield digital-first plants and massive brownfield retrofit. India's emission intensity at 2.55 tCO₂/tcs (38% above global average) creates urgent need for AI-driven efficiency under CCTS mandates.</p>
+      </div>
+    </div>
+
+    <!-- Cement -->
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">🏭 Cement — Regulatory Urgency Meets Energy Waste</div><div class="vertical-stars">★★★★★</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">453 MT</span><span class="label">FY25 Production (2nd globally)</span></div>
+        <div class="v-stat"><span class="num">670 MT</span><span class="label">Installed Capacity (~60% util)</span></div>
+        <div class="v-stat"><span class="num">30%</span><span class="label">Power + Fuel as % of Cost</span></div>
+        <div class="v-stat"><span class="num">4.7–7.6%</span><span class="label">CCTS Emission Reduction Target</span></div>
+      </div>
+      <div class="vertical-body">
+        <p><strong>UltraTech Cement</strong> (Aditya Birla Group) — market leader with 150+ MTPA capacity. Has deployed AI-based <strong>"Expert Optimizer" for autonomous 24/7 kiln operation</strong>, replacing manual control loops with continuous thermal optimization. Reporting 2–5% specific thermal energy reduction.</p>
+        <p style="margin-top:12px"><strong>Dalmia Bharat</strong> — aggressive sustainability leader targeting carbon-negative operations. <strong>25,000 IoT tags deployed</strong> across plants with AI-managed kiln operations. Has committed to science-based emission targets.</p>
+        <p style="margin-top:12px"><strong>Shree Cement</strong> — lowest-cost producer, uses AI for energy optimization across its fleet. Reporting significant maintenance cost reductions of approximately 20%.</p>
+        <p style="margin-top:12px"><strong>Adani Cement + Ambuja</strong> — rapidly consolidating through acquisitions, creating integration demand. Newly acquired plants represent massive brownfield AI deployment opportunity.</p>
+        <p style="margin-top:12px"><strong>Opportunity:</strong> CCTS mandates 4.7–7.6% emission intensity reduction for cement. Kiln thermal energy alone is 60–70% of total energy — AI kiln optimization (2–5% savings) directly addresses the largest cost and compliance pressure point. Top 5 players control ~55% market share; fragmented mid-tier = opportunity for standardized AI platform.</p>
+      </div>
+    </div>
+
+    <!-- Oil & Gas -->
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">⛽ Oil & Gas Refining — Massive Value per Site</div><div class="vertical-stars">★★★★☆</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">258 MMTPA</span><span class="label">Refining Capacity (4th globally)</span></div>
+        <div class="v-stat"><span class="num">23</span><span class="label">Refineries</span></div>
+        <div class="v-stat"><span class="num">50–60%</span><span class="label">Energy as % of OpEx</span></div>
+        <div class="v-stat"><span class="num">4.74–7.77</span><span class="label">tCO₂e/barrel range</span></div>
+      </div>
+      <div class="vertical-body">
+        <p><strong>Reliance Industries (Jamnagar)</strong> — world's largest single-location refinery (60 MMTPA). Deployed proprietary <strong>GeCOS crude scheduling AI</strong> handling 400 crude types with 12,000 variants for optimal blend determination. Building <strong>multi-GW AI data centers on-site</strong> and has committed $110B to AI infrastructure over 7 years.</p>
+        <p style="margin-top:12px"><strong>BPCL</strong> — most digitally advanced public-sector refiner. <strong>Digital twins, robotics, AR/VR deployed across 3 refineries</strong> with AspenTech and Microsoft partnerships. Smart Energy Management System targeting up to 25% energy savings and 15–20% carbon reduction.</p>
+        <p style="margin-top:12px"><strong>Indian Oil Corporation (IOCL)</strong> — largest refiner by volume. Piloting predictive maintenance across refinery network. Carbon intensity varies widely (IOCL Guwahati at 7.77 tCO₂e/barrel = massive optimization headroom).</p>
+        <p style="margin-top:12px"><strong>Opportunity:</strong> Carbon intensity ranges from Reliance SEZ's 4.74 to IOCL Guwahati's 7.77 — this 63% variance indicates enormous optimization headroom. All 21 major refineries fall under CCTS emission targets for 2025–27.</p>
+      </div>
+    </div>
+
+    <!-- Pharma -->
+    <div class="vertical-section">
+      <div class="vertical-header"><div class="vertical-title">💊 Pharmaceuticals — Compliance Creates Deep Moats</div><div class="vertical-stars">★★★★☆</div></div>
+      <div class="vertical-stats">
+        <div class="v-stat"><span class="num">$55B</span><span class="label">Current Market (→ $120–130B 2030)</span></div>
+        <div class="v-stat"><span class="num">650</span><span class="label">US-FDA Compliant Plants</span></div>
+        <div class="v-stat"><span class="num">10,500</span><span class="label">Total Manufacturing Units</span></div>
+        <div class="v-stat"><span class="num">50%</span><span class="label">Companies Investing in AI</span></div>
+      </div>
+      <div class="vertical-body">
+        <p><strong>Dr. Reddy's Laboratories</strong> — "OpsNext" digital transformation delivered <strong>~90% productivity improvement and 40% quality cost reduction</strong>. Uses AVEVA PI System as data backbone. WEF Lighthouse recognized for Hyderabad operations.</p>
+        <p style="margin-top:12px"><strong>Cipla (Indore plant)</strong> — achieved <strong>26% total cost reduction, 300% quality enhancement, and 28% GHG reduction</strong> through comprehensive 4IR deployment. WEF Lighthouse recognized — one of only two Indian pharma WEF Lighthouse facilities.</p>
+        <p style="margin-top:12px"><strong>Opportunity:</strong> India has the most US-FDA compliant plants outside the US (650). FDA's Process Analytical Technology (PAT) push creates natural regulatory tailwind for AI. The 10,500 total manufacturing units represent a massive long-tail expansion path. GxP validation requirements create barriers to entry but equally massive barriers to displacement once established.</p>
+      </div>
+    </div>
+
+    <!-- Remaining verticals as compact cards -->
+    <div class="card-grid card-grid-3">
+      <div class="vertical-section" style="margin-bottom:0">
+        <div class="vertical-title" style="font-size:1.05rem">🖥️ Data Centers</div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:8px"><strong>$5.4–8B → $10.7–24.8B by 2030.</strong> PUE 1.5–1.6 vs global 1.1–1.2 (tropical climate). Cooling = 30–50% of energy. Capacity: 350 MW (2019) → 1,520 MW (2025) → 3,400–9,200 MW (2030). <strong>Nxtra (Airtel)</strong>: first Indian AI cooling deployment (Nov 2024). <strong>Reliance</strong>: 3 GW AI data center at Jamnagar. <strong>Adani</strong>: $100B renewable-powered hyperscale by 2035.</p>
+      </div>
+      <div class="vertical-section" style="margin-bottom:0">
+        <div class="vertical-title" style="font-size:1.05rem">⚡ Power & Energy</div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:8px"><strong>NTPC (72+ GW, 70+ stations):</strong> ₹850+ crore/year savings from AI predictive maintenance. 35% unplanned outage ↓, 88% prediction accuracy. Smart Meter National Programme: 250M meters by 2027 (22.9M installed March 2025). Grid needs AI for 500 GW intermittent renewables by 2030.</p>
+      </div>
+      <div class="vertical-section" style="margin-bottom:0">
+        <div class="vertical-title" style="font-size:1.05rem">🚗 Automotive ($250B)</div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:8px">World's 3rd largest, 7.1% GDP. <strong>Hyundai Chennai:</strong> 20B data points/year via IIoT. <strong>Tata Motors:</strong> Digital.AI Labs subsidiary. <strong>TVS Motors:</strong> 18% first-pass yield ↑ (computer vision). <strong>Welspun India:</strong> 30% quality complaint ↓, 15% material waste ↓, &lt;9 month ROI. EV push = greenfield digital factories.</p>
+      </div>
+    </div>
+    <div class="card-grid card-grid-2" style="margin-top:20px">
+      <div class="vertical-section" style="margin-bottom:0">
+        <div class="vertical-title" style="font-size:1.05rem">🍕 Food & Beverage ($333–354B)</div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:8px">Cold chain optimization potential — 20–25% of India's food production is wasted due to inadequate cold chain. AI-driven cold chain management can reduce spoilage by 30–40%. PLI scheme for food processing = ₹10,900 crore. Massive MSME base creates platform opportunity.</p>
+      </div>
+      <div class="vertical-section" style="margin-bottom:0">
+        <div class="vertical-title" style="font-size:1.05rem">🧵 Textiles ($150+B, 45M employed)</div>
+        <p style="font-size:.82rem;color:var(--text2);margin-top:8px">~20% AI adoption — largest untapped labor-intensive sector. Welspun's success (30% quality complaint ↓) validates AI for textiles. PLI scheme + Mega Integrated Textile Region (MITRA) creating new smart factories. Quality inspection via CV is natural entry point.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. INDIA COMPANIES -->
+<section id="india-companies">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>10 — India Competitive Landscape</div>
+    <div class="section-title">35+ startups, under $300M cumulative — wide open market</div>
+    <p class="section-desc">The Indian industrial AI startup ecosystem is nascent — the entire sector has raised less than what a single global player like Augury has. This creates significant room for a well-capitalized, technically differentiated entrant.</p>
+    <div class="chart-wrap"><h3>Indian Industrial AI Startup Funding ($M)</h3><div class="chart-sub">Total funding raised — exits shown with hatched pattern</div><div class="chart-container" style="height:320px"><canvas id="chartIndiaStartups"></canvas></div></div>
+    <div class="card-grid card-grid-2" style="margin-top:24px">
+      <div class="company-card tier-leader">
+        <div class="company-header"><span class="company-name">Infinite Uptime</span><span class="company-funding">$68.6M raised</span></div>
+        <div class="company-meta"><span class="tag tag-green">Series C</span><span class="tag tag-blue">800+ Plants</span><span class="tag tag-purple">26 Countries</span></div>
+        <div class="company-desc">PlantOS platform combining proprietary piezoelectric vibration sensors with prescriptive maintenance AI. Revenue ₹55 crore FY24 (+119% YoY). Covers cement, FMCG, auto, pharma. Investors: Avataar Ventures, Tiger Global, Chiratae.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">HQ: </span><span class="dvalue">Pune</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Piezoelectric sensors + prescriptive AI</span></div>
+          <div class="company-detail"><span class="dlabel">Clients: </span><span class="dvalue">Tata Steel, UltraTech, Nestlé India</span></div>
+          <div class="company-detail"><span class="dlabel">Differentiator: </span><span class="dvalue">Proprietary hardware + 800 plant data</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-leader">
+        <div class="company-header"><span class="company-name">Detect Technologies</span><span class="company-funding">$45.7M raised</span></div>
+        <div class="company-meta"><span class="tag tag-green">Series B</span><span class="tag tag-blue">IIT Madras</span><span class="tag tag-orange">~478 employees</span></div>
+        <div class="company-desc">Industrial safety + asset integrity for oil & gas, metals, mining. DETECT platform: AI for pipeline corrosion monitoring, safety compliance, drone inspections. Investors: Prosus, Shell Ventures, Accel, Elevation Capital.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">HQ: </span><span class="dvalue">Chennai</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Computer vision + edge AI + drones</span></div>
+          <div class="company-detail"><span class="dlabel">Clients: </span><span class="dvalue">Shell, Reliance, Tata Steel, Vedanta</span></div>
+          <div class="company-detail"><span class="dlabel">Differentiator: </span><span class="dvalue">Safety-first positioning; Shell strategic backing</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-growth">
+        <div class="company-header"><span class="company-name">Ripik AI</span><span class="company-funding">$14.2M raised</span></div>
+        <div class="company-meta"><span class="tag tag-blue">Accel-backed</span><span class="tag tag-green">CV for Process Industries</span></div>
+        <div class="company-desc">Computer vision for cement, steel, metals process optimization. Reports 1–4% yield improvement and 10–15% energy efficiency gains through thermal imaging + AI for kiln/furnace optimization.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">HQ: </span><span class="dvalue">Delhi NCR</span></div>
+          <div class="company-detail"><span class="dlabel">Verticals: </span><span class="dvalue">Cement, Steel, Metals</span></div>
+          <div class="company-detail"><span class="dlabel">Differentiator: </span><span class="dvalue">Real-time visual process control</span></div>
+          <div class="company-detail"><span class="dlabel">Gap: </span><span class="dvalue">CV only; no closed-loop control</span></div>
+        </div>
+      </div>
+      <div class="company-card tier-growth">
+        <div class="company-header"><span class="company-name">CynLr</span><span class="company-funding">$15.3M raised</span></div>
+        <div class="company-meta"><span class="tag tag-purple">WEF Tech Pioneer</span><span class="tag tag-blue">Series A</span></div>
+        <div class="company-desc">General-purpose robotic vision for the "universal factory." Building visual object intelligence enabling robots to handle unstructured manufacturing tasks. IISc Bangalore collaboration.</div>
+        <div class="company-details">
+          <div class="company-detail"><span class="dlabel">HQ: </span><span class="dvalue">Bangalore</span></div>
+          <div class="company-detail"><span class="dlabel">Tech: </span><span class="dvalue">Robotic vision + manipulation</span></div>
+          <div class="company-detail"><span class="dlabel">Target: </span><span class="dvalue">Discrete manufacturing</span></div>
+          <div class="company-detail"><span class="dlabel">Differentiator: </span><span class="dvalue">General-purpose robot intelligence</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap" style="margin-top:24px">
+      <h3>Notable Indian Industrial AI Exits & Global Incumbents in India</h3>
+      <table>
+        <thead><tr><th>Entity</th><th>Type</th><th>India Revenue / Activity</th><th>Strategic Signal</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Flutura → Accenture</strong></td><td>Acquisition (2023)</td><td>IIoT platform for heavy industry</td><td>Validates India-built industrial AI has acquirer interest</td></tr>
+          <tr><td><strong>Prescinto → IBM</strong></td><td>Acquisition (2024)</td><td>Renewable energy AI analytics</td><td>IBM expanding India industrial AI footprint</td></tr>
+          <tr><td><strong>Siemens India</strong></td><td>Incumbent</td><td>$2.4B revenue; Xcelerator/Industrial Edge</td><td>Strong hardware installed base; building AI layer on top</td></tr>
+          <tr><td><strong>ABB India</strong></td><td>Incumbent</td><td>$1.47B revenue; SAIL digital twin deal</td><td>Process automation dominant; expanding into AI services</td></tr>
+          <tr><td><strong>Schneider Electric India</strong></td><td>Incumbent</td><td>Acquired full India JV for $6.4B (Sep 2025)</td><td>Massive commitment signals India as strategic priority</td></tr>
+          <tr><td><strong>TCS Manufacturing</strong></td><td>IT Services</td><td>~$4.5–4.8B manufacturing vertical</td><td>Positioned as SI, not product company — potential partner</td></tr>
+          <tr><td><strong>Infosys Manufacturing</strong></td><td>IT Services</td><td>~$3.1B manufacturing vertical</td><td>SI + consulting play — can be channel partner or competitor</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 11. INDIA POLICY -->
+<section id="india-policy">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>11 — India Policy & Regulatory Tailwinds</div>
+    <div class="section-title">$26B+ in incentives and binding emission mandates</div>
+    <div class="card-grid card-grid-3" style="margin-bottom:32px">
+      <div class="card" style="border-top:3px solid var(--green)"><h3>Supply Side: PLI Schemes</h3><span class="metric" style="font-size:1.3rem">₹1.97L Cr</span><span class="sub-metric">($26B) across 14 sectors</span><p style="margin-top:12px">Attracted ₹1.76L Cr actual investment; generated ₹16.5L Cr production. Covers steel, pharma, auto, electronics, food processing, textiles. Creates AI-ready greenfield plants.</p></div>
+      <div class="card" style="border-top:3px solid var(--accent)"><h3>AI Infrastructure</h3><span class="metric" style="font-size:1.3rem">₹10,372 Cr</span><span class="sub-metric">IndiaAI Mission ($1.25B / 5 years)</span><p style="margin-top:12px">10,000+ GPUs, startup financing (up to ₹4 Cr/startup), indigenous AI models. Plus ₹10,000 Cr Deep Tech Fund of Funds + ₹1 trillion R&D Innovation Scheme.</p></div>
+      <div class="card" style="border-top:3px solid var(--orange)"><h3>Demand Side: CCTS</h3><span class="metric" style="font-size:1.3rem">~740</span><span class="sub-metric">Entities under binding emission targets</span><p style="margin-top:12px">Carbon Credit Trading Scheme: legally mandated emission intensity targets across 9 sectors. SEBI BRSR: top 1,000 companies must disclose GHG. EU CBAM: export urgency.</p></div>
+    </div>
+    <div class="chart-wrap"><h3>CCTS — Emission Reduction Mandates by Sector (2025–2027)</h3><div class="chart-sub">Required emission intensity reduction targets (%). These are legally binding.</div><div class="chart-container" style="height:300px"><canvas id="chartCCTS"></canvas></div></div>
+    <div class="table-wrap">
+      <h3>Policy Instruments Driving Industrial AI Adoption</h3>
+      <table>
+        <thead><tr><th>Policy</th><th>Scope</th><th>Relevance to Physical AI</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td><strong>PLI Schemes</strong></td><td>14 sectors, ₹1.97L Cr</td><td>Incentivizes mfg investment; creates AI-ready greenfield plants</td><td><span class="tag tag-green">High</span></td></tr>
+          <tr><td><strong>IndiaAI Mission</strong></td><td>₹10,372 Cr, 5 years</td><td>GPU compute, startup financing, talent development</td><td><span class="tag tag-green">High</span></td></tr>
+          <tr><td><strong>CCTS (Carbon Trading)</strong></td><td>~740 entities, 9 sectors</td><td>Legally mandates efficiency — converts AI from optional to required</td><td><span class="tag tag-green">Very High</span></td></tr>
+          <tr><td><strong>SEBI BRSR</strong></td><td>Top 1,000 listed companies</td><td>Mandatory GHG + energy disclosure; value chain ESG for top 250</td><td><span class="tag tag-blue">High</span></td></tr>
+          <tr><td><strong>EU CBAM</strong></td><td>Steel, cement, aluminum exporters</td><td>Export-driven urgency for emission tracking + AI optimization</td><td><span class="tag tag-green">High</span></td></tr>
+          <tr><td><strong>SAMARTH Udyog 4.0</strong></td><td>4 centers (10 planned)</td><td>Industry 4.0 awareness + training; creates informed buyer base</td><td><span class="tag tag-blue">Medium</span></td></tr>
+          <tr><td><strong>PAT Scheme</strong></td><td>Energy-intensive industries</td><td>Perform-Achieve-Trade for designated consumers</td><td><span class="tag tag-blue">Medium</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 12. INDIA ROI -->
+<section id="india-roi">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>12 — Quantified ROI from Indian Deployments</div>
+    <div class="section-title">The proof points that close deals</div>
+    <div class="chart-wrap"><h3>Indian AI Deployment Outcomes — Radar Comparison</h3><div class="chart-sub">Normalized performance across 6 dimensions (higher = better)</div><div class="chart-container" style="height:380px"><canvas id="chartROI"></canvas></div></div>
+    <div class="table-wrap">
+      <h3>India Case Studies — Detailed Outcomes</h3>
+      <table>
+        <thead><tr><th>Company</th><th>Vertical</th><th>AI Application</th><th>Key Outcomes</th><th>Payback</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Tata Steel</strong></td><td>Steel</td><td>550+ AI models across value chain</td><td>$1.4B cumulative savings; 1:10 cost-benefit; 50% downtime ↓</td><td>&lt;12 mo</td></tr>
+          <tr><td><strong>Dr. Reddy's</strong></td><td>Pharma</td><td>OpsNext digital transformation</td><td>~90% productivity ↑; 40% quality cost ↓; WEF Lighthouse</td><td>12–18 mo</td></tr>
+          <tr><td><strong>Cipla (Indore)</strong></td><td>Pharma</td><td>4IR across manufacturing</td><td>26% total cost ↓; 300% quality ↑; 28% GHG ↓</td><td>12–18 mo</td></tr>
+          <tr><td><strong>NTPC</strong></td><td>Power</td><td>Fleet-wide predictive maintenance</td><td>₹850+ Cr/yr savings; 35% outage ↓; 88% accuracy</td><td>&lt;12 mo</td></tr>
+          <tr><td><strong>TVS Motors</strong></td><td>Auto</td><td>Computer vision quality</td><td>18% first-pass yield improvement</td><td>6–9 mo</td></tr>
+          <tr><td><strong>Welspun India</strong></td><td>Textiles</td><td>AI quality + resource optimization</td><td>30% quality complaints ↓; 15% material waste ↓</td><td>&lt;9 mo</td></tr>
+          <tr><td><strong>10 Factory Study</strong></td><td>Multi-sector</td><td>AI energy optimization</td><td>106,124 kWh/yr per factory saved</td><td>0.46 years</td></tr>
+          <tr><td><strong>SAP India Survey</strong></td><td>Cross-sector</td><td>Enterprise AI deployment</td><td>93% expect positive returns within 3 years</td><td>1–3 years</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 13. INDIA FUNDING -->
+<section id="india-funding">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>13 — India Funding Landscape</div>
+    <div class="section-title">Massively underfunded relative to opportunity</div>
+    <div class="card-grid card-grid-3" style="margin-bottom:32px">
+      <div class="card"><span class="metric">$2.3B</span><span class="sub-metric">Deep tech funding 2025 (+37% YoY)</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">AI = 84% of startups, 91% of capital. But industrial AI = tiny fraction.</p></div>
+      <div class="card"><span class="metric">&lt;$300M</span><span class="sub-metric">India industrial AI total raised</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">188× gap with US. Entire sector &lt; one global player's raise.</p></div>
+      <div class="card"><span class="metric">$110B</span><span class="sub-metric">Reliance AI commitment (7 years)</span><p style="margin-top:8px;font-size:.82rem;color:var(--text2)">Plus Tata-NVIDIA partnership; Adani $100B data center plans.</p></div>
+    </div>
+    <div class="chart-wrap"><h3>India vs. Global AI Funding (Log Scale)</h3><div class="chart-sub">India captures &lt;1% of global AI capital — structural opportunity for early movers</div><div class="chart-container" style="height:300px"><canvas id="chartFundingGap"></canvas></div></div>
+    <div class="table-wrap">
+      <h3>Active Investors in Indian Industrial AI</h3>
+      <table>
+        <thead><tr><th>Investor</th><th>Type</th><th>Portfolio</th><th>Thesis</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Accel</strong></td><td>VC</td><td>Detect Technologies, Ripik AI</td><td>Deep tech + industrial verticalization</td></tr>
+          <tr><td><strong>Tiger Global</strong></td><td>VC</td><td>Infinite Uptime</td><td>Platform + international scale</td></tr>
+          <tr><td><strong>Prosus Ventures</strong></td><td>VC</td><td>Detect Technologies</td><td>Industrial safety at global scale</td></tr>
+          <tr><td><strong>Shell Ventures</strong></td><td>Corp VC</td><td>Detect Technologies</td><td>Strategic O&G ecosystem access</td></tr>
+          <tr><td><strong>India Deep Tech Alliance</strong></td><td>Consortium</td><td>$2.5B+ committed (NVIDIA, Qualcomm)</td><td>$1B earmarked for Indian AI startups over 3 years</td></tr>
+          <tr><td><strong>IndiaAI Mission</strong></td><td>Government</td><td>Startup financing program</td><td>Up to ₹4 Cr per startup for AI solutions</td></tr>
+          <tr><td><strong>Reliance JioGenNext</strong></td><td>Corp Accelerator</td><td>185 startups accelerated</td><td>JioBrain platform integration opportunity</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 14. INDIA GTM -->
+<section id="india-gtm">
+  <div class="container">
+    <div class="section-label"><span class="india-accent"><span></span><span></span><span></span></span>14 — India Go-to-Market Strategy</div>
+    <div class="section-title">Patience, pilots, and hybrid pricing</div>
+    <div class="card-grid card-grid-2" style="margin-bottom:32px">
+      <div class="chart-wrap"><h3>India vs. Global ACV Benchmarks</h3><div class="chart-sub">Annual contract value ($ thousands) — 50–70% discount to global</div><div class="chart-container" style="height:300px"><canvas id="chartPricing"></canvas></div></div>
+      <div class="chart-wrap"><h3>India Sales Cycle Length</h3><div class="chart-sub">Months from first contact to signed contract</div><div class="chart-container" style="height:300px"><canvas id="chartSalesCycle"></canvas></div></div>
+    </div>
+    <div class="insight">
+      <h4>💰 India Pricing Reality: 50–70% Discount vs. US</h4>
+      <p><strong>₹15–30 lakh/yr ($18K–$36K)</strong> for single-plant SMEs → <strong>₹1–3 crore/yr ($120K–$360K)</strong> for large enterprise first sites → <strong>₹5–20 crore/yr ($600K–$2.4M)</strong> for conglomerate group-wide. Best model: CapEx hardware (exploit 40% depreciation rate) + OpEx SaaS subscription + optional outcome-based kicker. GST 18% on software services. Strong preference for INR billing from India-registered entities. Plant heads have ₹4–40 lakh discretionary spending — perfect for ₹10–30 lakh paid POC entry point.</p>
+    </div>
+    <h3 style="margin:32px 0 20px;font-size:1.1rem">Go-to-Market Sequence</h3>
+    <div class="flow">
+      <div class="flow-step"><span class="step-num">PHASE 1 (Mo 1–6)</span><h4>Land: Paid POC</h4><p>₹10–30L POC at 2–3 anchor accounts. Target process engineer. 90-day proof.</p></div>
+      <div class="flow-step"><span class="step-num">PHASE 2 (Mo 6–12)</span><h4>Expand: Multi-line</h4><p>Scale within plant. ₹1–3 Cr annual. Build case study with VP Ops.</p></div>
+      <div class="flow-step"><span class="step-num">PHASE 3 (Mo 12–24)</span><h4>Enterprise: Multi-site</h4><p>Cross-conglomerate. ₹5–20 Cr. Cross-sell within group entities.</p></div>
+      <div class="flow-step"><span class="step-num">PHASE 4 (Mo 24+)</span><h4>Platform: Global</h4><p>Open APIs. India as proof for ME, SE Asia, US/EU expansion.</p></div>
+    </div>
+    <div class="table-wrap" style="margin-top:32px">
+      <h3>Navigating Indian Conglomerates — Entry Strategy</h3>
+      <table>
+        <thead><tr><th>Group</th><th>Key Industrial Entities</th><th>AI Maturity</th><th>Recommended Entry Point</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Tata Group</strong></td><td>Tata Steel, Tata Motors, Tata Power, TCS</td><td><span class="tag tag-green">Advanced</span></td><td>Partner via TCS; showcase differentiation vs. existing 550+ models at Tata Steel</td></tr>
+          <tr><td><strong>Reliance</strong></td><td>Jamnagar Refinery, JioBrain, Retail</td><td><span class="tag tag-green">Advanced</span></td><td>Refinery optimization; leverage JioBrain; massive DC cooling opportunity</td></tr>
+          <tr><td><strong>Adani</strong></td><td>Adani Cement, Power, AdaniConneX</td><td><span class="tag tag-blue">Growing</span></td><td>Cement + power: rapid acquisitions create integration demand for AI</td></tr>
+          <tr><td><strong>Aditya Birla</strong></td><td>UltraTech, Hindalco, Grasim</td><td><span class="tag tag-blue">Growing</span></td><td>Kiln optimization at UltraTech; aluminum smelting at Hindalco</td></tr>
+          <tr><td><strong>JSW Group</strong></td><td>JSW Steel, Cement, Energy</td><td><span class="tag tag-blue">Growing</span></td><td>Steel smart factory; cross-sell cement + energy within group</td></tr>
+          <tr><td><strong>Mahindra</strong></td><td>Mahindra Auto, Tech Mahindra</td><td><span class="tag tag-blue">Growing</span></td><td>Auto quality + EV mfg; Tech Mahindra as potential SI channel partner</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 15. STRATEGY -->
+<section id="strategy">
+  <div class="container">
+    <div class="section-label">15 — Strategic Recommendations</div>
+    <div class="section-title">Where to play and how to win from India</div>
+    <div class="card-grid card-grid-2" style="margin-bottom:32px">
+      <div class="card" style="border:1px solid var(--accent);background:rgba(79,140,255,.03)">
+        <h3 style="color:var(--accent)">🎯 Primary Beachhead: Cement + Steel</h3>
+        <p>Massive energy costs (20–50% of COGS), regulatory pressure from CCTS, demonstrated 2–10% efficiency gains, and fragmented competitive landscape. Incumbents strong in hardware automation, weak in AI optimization. Start with kiln/furnace optimization — highest ROI wedge with clearest measurement.</p>
+      </div>
+      <div class="card" style="border:1px solid var(--green);background:rgba(52,211,153,.03)">
+        <h3 style="color:var(--green)">🔋 Secondary: Oil & Gas + Data Centers</h3>
+        <p>Highest dollar value per deployment (O&G: ₹5–20 Cr per site) and fastest-growing buyer base (DCs: 25–32% CAGR). O&G = concentrated decision-making, massive ACV. DCs = tech-forward buyers with quantifiable PUE improvement (India PUE gap = 0.3–0.5).</p>
+      </div>
+      <div class="card" style="border:1px solid var(--accent2);background:rgba(124,92,252,.03)">
+        <h3 style="color:var(--accent2)">💊 Expansion: Pharma + F&B</h3>
+        <p>Compliance-driven (FDA PAT, GxP). Proven ROI from Dr. Reddy's (90% productivity ↑) and Cipla (26% cost ↓). 10,500 pharma manufacturing units = massive expansion path. F&B: $354B sector with cold chain waste as natural entry point.</p>
+      </div>
+      <div class="card" style="border:1px solid var(--orange);background:rgba(251,146,60,.03)">
+        <h3 style="color:var(--orange)">🌍 Long-term: India → Global</h3>
+        <p>Use India as cost-effective proving ground. 8–10× talent advantage funds world-class R&D at fraction of cost. Deploy proven solutions: Middle East (high ACV, relationship-driven), SE Asia (similar maturity curve), then US/EU (premium pricing, larger TAM).</p>
+      </div>
+    </div>
+    <div class="chart-wrap"><h3>Strategic Prioritization — India Vertical Opportunity Matrix</h3><div class="chart-sub">X = Ease of entry (lower X = easier); Y = Revenue potential; Bubble size = Regulatory tailwind</div><div class="chart-container" style="height:380px"><canvas id="chartStrategy"></canvas></div></div>
+
+    <h3 style="margin:32px 0 20px;font-size:1.1rem">Product Architecture: Wedge → Platform</h3>
+    <div class="flow">
+      <div class="flow-step"><span class="step-num">YEAR 1–2</span><h4>Point Solution</h4><p>Single high-ROI use case (kiln optimization / predictive maintenance). $200K–$1M ACV. Edge-first for real-time.</p></div>
+      <div class="flow-step"><span class="step-num">YEAR 2–3</span><h4>Adjacent Use Cases</h4><p>Expand within customer: energy mgmt → quality → emissions tracking. Build proprietary data flywheel.</p></div>
+      <div class="flow-step"><span class="step-num">YEAR 3–5</span><h4>Platform Layer</h4><p>Open APIs, 3rd-party apps. Multi-plant fleet management. Horizontal expansion across verticals.</p></div>
+    </div>
+
+    <h3 style="margin:32px 0 20px;font-size:1.1rem">Moat-Building Priority Order</h3>
+    <div class="flow">
+      <div class="flow-step"><span class="step-num">PRIORITY 1</span><h4>Proprietary Data</h4><p>Each deployment generates unique process data → compounding flywheel.</p></div>
+      <div class="flow-step"><span class="step-num">PRIORITY 2</span><h4>Domain Expertise</h4><p>Hire process engineers alongside ML engineers. Deep vertical knowledge = moat.</p></div>
+      <div class="flow-step"><span class="step-num">PRIORITY 3</span><h4>Integration Depth</h4><p>Every OT protocol adapter (OPC UA, MQTT, Modbus) = competitive infrastructure.</p></div>
+      <div class="flow-step"><span class="step-num">PRIORITY 4</span><h4>Outcome Contracts</h4><p>Shared-risk pricing creates lock-in through value alignment.</p></div>
+    </div>
+
+    <div class="insight" style="margin-top:40px">
+      <h4>⚡ The Most Non-Obvious Insight from This Entire Research</h4>
+      <p>The greatest competitive threat is not other startups or incumbents — it is <strong>pilot purgatory</strong>. With ~70% of IIoT initiatives stuck in pilot and only 5% of enterprise AI scaling to production, the company that solves the deployment-to-production gap will capture disproportionate value. This is fundamentally a <strong>product and customer success problem</strong>, not an AI research problem. The startup that builds the fastest path from sensor data to measurable savings — and does so repeatably across sites — will define the category.</p>
+    </div>
+
+    <!-- Scenario Analysis -->
+    <div class="card-grid card-grid-3" style="margin-top:32px">
+      <div class="card" style="border-top:3px solid var(--green)">
+        <h3 style="color:var(--green)">Best Case (20%)</h3>
+        <p>Aggressive CCTS enforcement + workforce retirements + GenAI breakthroughs compress adoption to 3–5 years. India industrial AI reaches ₹25,000+ Cr by 2030. M&A wave at premium multiples (15–20× revenue). Land-grab favors first movers with proven deployments.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--accent)">
+        <h3 style="color:var(--accent)">Base Case (55%)</h3>
+        <p>Gradual adoption led by process industries. India market reaches ₹28,000 Cr by 2030. Large firms 2× adoption rate vs. SMEs. Sales cycles stay 9–18 months. Services revenue above 30%. Patient capital + deep customer relationships win.</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--red)">
+        <h3 style="color:var(--red)">Worst Case (25%)</h3>
+        <p>Siemens Xcelerator + Schneider India + TCS/Infosys bundles prove "good enough." Startup-addressable market compresses. Indian IT giants absorb value through system integration. Window narrows to niche verticalized plays only.</p>
+      </div>
+    </div>
+
+    <!-- Final numbers -->
+    <div class="card" style="margin-top:32px;border:1px solid var(--yellow);background:rgba(251,191,36,.03);padding:32px">
+      <h3 style="color:var(--yellow);margin-bottom:16px">📊 The Numbers That Matter</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center">
+        <div><span style="font-family:'JetBrains Mono';font-size:1.6rem;color:var(--green);display:block">$3.75B</span><span style="font-size:.75rem;color:var(--text3)">India market by 2030</span></div>
+        <div><span style="font-family:'JetBrains Mono';font-size:1.6rem;color:var(--accent);display:block">&lt;15%</span><span style="font-size:.75rem;color:var(--text3)">Factories with MES</span></div>
+        <div><span style="font-family:'JetBrains Mono';font-size:1.6rem;color:var(--accent2);display:block">8–10×</span><span style="font-size:.75rem;color:var(--text3)">India talent cost advantage</span></div>
+        <div><span style="font-family:'JetBrains Mono';font-size:1.6rem;color:var(--orange);display:block">0.46 yr</span><span style="font-size:.75rem;color:var(--text3)">AI energy payback</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding:60px 0;text-align:center;color:var(--text3);font-size:.8rem;border-top:1px solid var(--border)">
+  <div class="container">
+    <p style="font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--text2);margin-bottom:8px">Physical AI for Industrial Optimization</p>
+    <p>Strategic Intelligence Report · Prepared February 2026</p>
+    <p style="margin-top:4px">Sources: Grand View Research, IBEF, NASSCOM, PIB India, WEF, Tracxn, Inc42, TechCrunch, company filings, McKinsey, BCG, IoT Analytics</p>
+  </div>
+</footer>
+
+<!-- ALL CHARTS -->
+<script>
+const C={a:'#4f8cff',a2:'#7c5cfc',g:'#34d399',r:'#f87171',o:'#fb923c',y:'#fbbf24',c:'#22d3ee',p:'#f472b6',t2:'#8b95a8',t3:'#5a6478',b:'#2a3040'};
+Chart.defaults.color=C.t2;Chart.defaults.borderColor=C.b;Chart.defaults.font.family="'DM Sans',sans-serif";Chart.defaults.font.size=11;
+Chart.defaults.plugins.legend.labels.usePointStyle=true;Chart.defaults.plugins.legend.labels.pointStyleWidth=10;
+
+new Chart(document.getElementById('chartMarketGrowth'),{type:'bar',data:{labels:['Smart Mfg','Industrial Auto','AI in Mfg','Pred. Maint.','Digital Twins','AI Energy','Physical AI'],datasets:[{label:'2024 ($B)',data:[350,213,6,12,19,10,4.5],backgroundColor:C.a+'88',borderRadius:4},{label:'2030 ($B)',data:[745,393,47.5,53,140,41,59.5],backgroundColor:C.g+'88',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{grid:{color:C.b}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartCAGR'),{type:'bar',data:{labels:['India AI in Mfg','Digital Twins','AI in Mfg (Global)','Physical AI','AI in Energy','Pred. Maint.','Smart Mfg'],datasets:[{label:'CAGR %',data:[54.7,41,39,32.5,31,30,14],backgroundColor:[C.a2,C.g,C.a,C.c,C.y,C.o,C.t3],borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.b},max:60},y:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartGeo'),{type:'doughnut',data:{labels:['North America','Asia-Pacific','Europe','Middle East & Africa','Latin America'],datasets:[{data:[33,34,28,3,2],backgroundColor:[C.a,C.g,C.a2,C.o,C.t3],borderWidth:0,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{padding:12}}}}});
+
+new Chart(document.getElementById('chartMA'),{type:'bar',data:{labels:['Emerson/AspenTech','Schneider/AVEVA','Siemens/Altair','Emerson/NI','Schneider India JV','Rockwell/Plex'],datasets:[{label:'Deal Value ($B)',data:[16.8,11,10,8.2,6.4,2.2],backgroundColor:[C.r+'cc',C.o+'cc',C.a+'cc',C.a2+'cc',C.p+'cc',C.g+'cc'],borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.b}},y:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartVerticals'),{type:'bubble',data:{datasets:[{label:'Data Centers',data:[{x:80,y:90,r:18}],backgroundColor:C.g+'aa'},{label:'Oil & Gas',data:[{x:65,y:85,r:24}],backgroundColor:C.a+'aa'},{label:'Cement/Steel',data:[{x:55,y:80,r:22}],backgroundColor:C.o+'aa'},{label:'Pharma',data:[{x:50,y:70,r:16}],backgroundColor:C.a2+'aa'},{label:'Adv. Mfg',data:[{x:70,y:60,r:20}],backgroundColor:C.c+'aa'},{label:'Food & Bev',data:[{x:45,y:65,r:14}],backgroundColor:C.y+'aa'},{label:'Power',data:[{x:40,y:55,r:20}],backgroundColor:C.p+'aa'},{label:'Automotive',data:[{x:60,y:50,r:15}],backgroundColor:C.t2+'aa'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Adoption Maturity \u2192',color:C.t3},grid:{color:C.b},min:20,max:100},y:{title:{display:true,text:'Strategic Attractiveness \u2192',color:C.t3},grid:{color:C.b},min:30,max:100}},plugins:{legend:{position:'bottom'}}}});
+
+new Chart(document.getElementById('chartStartupFunding'),{type:'bar',data:{labels:['Augury','Cognite','Phaidra','BrightAI','Archetype AI','EthonAI','Fero Labs','Imubit'],datasets:[{label:'Funding ($M)',data:[361,170,110,78,48,24.5,20,15],backgroundColor:[C.g,C.a,C.a2,C.o,C.y,C.c,C.p,C.t2],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:C.b}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartTechMatrix'),{type:'bubble',data:{datasets:[{label:'Pred. Maint.',data:[{x:85,y:60,r:16}],backgroundColor:C.g+'bb'},{label:'RL Autonomous',data:[{x:50,y:95,r:14}],backgroundColor:C.a+'bb'},{label:'Causal AI',data:[{x:45,y:80,r:12}],backgroundColor:C.a2+'bb'},{label:'Physics NN',data:[{x:30,y:70,r:10}],backgroundColor:C.o+'bb'},{label:'Foundation Models',data:[{x:20,y:90,r:10}],backgroundColor:C.y+'bb'},{label:'Computer Vision',data:[{x:80,y:65,r:14}],backgroundColor:C.c+'bb'},{label:'Digital Twins',data:[{x:60,y:75,r:16}],backgroundColor:C.p+'bb'},{label:'Industrial LLMs',data:[{x:40,y:40,r:12}],backgroundColor:C.t2+'bb'},{label:'Edge AI',data:[{x:70,y:55,r:12}],backgroundColor:C.r+'bb'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Commercial Maturity \u2192',color:C.t3},grid:{color:C.b},min:10,max:100},y:{title:{display:true,text:'Value Ceiling \u2192',color:C.t3},grid:{color:C.b},min:20,max:100}},plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}});
+
+new Chart(document.getElementById('chartBuyers'),{type:'bubble',data:{datasets:[{label:'Process Engineer',data:[{x:75,y:20,r:22}],backgroundColor:C.g+'bb'},{label:'Plant Manager',data:[{x:50,y:40,r:20}],backgroundColor:C.a+'bb'},{label:'VP Operations',data:[{x:35,y:70,r:18}],backgroundColor:C.a2+'bb'},{label:'CTO/CDO',data:[{x:40,y:85,r:14}],backgroundColor:C.o+'bb'},{label:'CFO',data:[{x:25,y:95,r:16}],backgroundColor:C.r+'bb'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Deal Velocity (faster \u2192)',color:C.t3},grid:{color:C.b},min:10,max:100},y:{title:{display:true,text:'Budget Authority ($) \u2192',color:C.t3},grid:{color:C.b},min:0,max:100}},plugins:{legend:{position:'bottom'}}}});
+
+new Chart(document.getElementById('chartIndiaGrowth'),{type:'line',data:{labels:['2024','2025','2026','2027','2028','2029','2030'],datasets:[{label:'India AI in Mfg ($M)',data:[298,462,716,1109,1718,2663,3750],borderColor:C.a,backgroundColor:C.a+'22',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:C.a}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:C.b}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartIndiaMaturity'),{type:'bar',data:{labels:['SCADA (Large Process)','SCADA (Mid-market)','SCADA (MSME)','MES (All)','Data Historians','AI/ML Layer'],datasets:[{label:'% Penetration',data:[80,40,12,15,25,5],backgroundColor:[C.g+'aa',C.a+'aa',C.o+'aa',C.a2+'aa',C.y+'aa',C.r+'aa'],borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.b},max:100},y:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartIndiaVerticals'),{type:'bar',data:{labels:['Steel','Auto','Food','Textiles','Oil&Gas','Power','Pharma','Chemicals','Cement','Data Ctr'],datasets:[{label:'Sector Size ($B)',data:[145,250,345,150,120,80,55,40,25,7],backgroundColor:C.t3+'55',borderRadius:4,yAxisID:'y'},{label:'AI Opportunity (1-10)',data:[9.5,7,7,5,8.5,7.5,8.5,6.5,9,9],backgroundColor:C.a+'cc',borderRadius:4,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{type:'linear',position:'left',grid:{color:C.b},title:{display:true,text:'Sector Size ($B)',color:C.t3}},y1:{type:'linear',position:'right',grid:{display:false},max:10,title:{display:true,text:'AI Opportunity',color:C.t3}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartIndiaStartups'),{type:'bar',data:{labels:['Infinite Uptime','Detect Tech','CynLr','Ripik AI','Flutura (\u2192Accenture)','Prescinto (\u2192IBM)','Qualitas Tech','SenseGiz'],datasets:[{label:'Funding ($M)',data:[68.6,45.7,15.3,14.2,12,8,5,3],backgroundColor:[C.a,C.g,C.a2,C.o,C.p+'88',C.p+'88',C.y,C.c],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:C.b}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartCCTS'),{type:'bar',data:{labels:['Pulp & Paper','Cement','Iron & Steel','Aluminum','Thermal Power','Petrochemicals','Textile','Chlor-Alkali','Fertilizer'],datasets:[{label:'Min Reduction %',data:[7,4.7,2.8,2.8,3,2.5,3,2,1.5],backgroundColor:C.a+'88',borderRadius:4},{label:'Max Reduction %',data:[15,7.6,7.06,7.06,8,6,7,5,4],backgroundColor:C.r+'88',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{grid:{color:C.b},title:{display:true,text:'Emission Intensity Reduction %',color:C.t3}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartROI'),{type:'radar',data:{labels:['Productivity \u2191','Cost Reduction','Quality \u2191','Downtime \u2193','Energy Savings','GHG Reduction'],datasets:[{label:'Tata Steel',data:[70,95,75,85,60,50],borderColor:C.a,backgroundColor:C.a+'22',pointBackgroundColor:C.a},{label:"Dr. Reddy's",data:[95,70,85,60,40,40],borderColor:C.g,backgroundColor:C.g+'22',pointBackgroundColor:C.g},{label:'Cipla',data:[80,80,95,50,50,75],borderColor:C.a2,backgroundColor:C.a2+'22',pointBackgroundColor:C.a2},{label:'NTPC',data:[60,85,50,90,70,55],borderColor:C.o,backgroundColor:C.o+'22',pointBackgroundColor:C.o}]},options:{responsive:true,maintainAspectRatio:false,scales:{r:{grid:{color:C.b},pointLabels:{color:C.t2},ticks:{display:false},suggestedMin:0,suggestedMax:100}},plugins:{legend:{position:'bottom'}}}});
+
+new Chart(document.getElementById('chartFundingGap'),{type:'bar',data:{labels:['US AI Funding','China AI','UK AI','India AI (all)','India Industrial AI'],datasets:[{label:'2025 ($B)',data:[120,40,8,.643,.068],backgroundColor:[C.a,C.r,C.a2,C.g,C.o],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{type:'logarithmic',grid:{color:C.b},title:{display:true,text:'Funding $ (log scale)',color:C.t3}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartPricing'),{type:'bar',data:{labels:['SME Single-plant','Large Enterprise','Conglomerate Group'],datasets:[{label:'India ACV ($K)',data:[27,240,1500],backgroundColor:C.g+'aa',borderRadius:4},{label:'Global ACV ($K)',data:[100,750,5000],backgroundColor:C.a+'aa',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top'}},scales:{y:{grid:{color:C.b}},x:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartSalesCycle'),{type:'bar',data:{labels:['Paid POC','Mid-market','Large Enterprise','Conglomerate','Global (avg)'],datasets:[{label:'Months',data:[3,9,15,18,12],backgroundColor:[C.g,C.a,C.o,C.r,C.t3],borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:C.b},max:24},y:{grid:{display:false}}}}});
+
+new Chart(document.getElementById('chartStrategy'),{type:'bubble',data:{datasets:[{label:'Cement',data:[{x:35,y:90,r:22}],backgroundColor:C.g+'bb'},{label:'Steel',data:[{x:40,y:85,r:20}],backgroundColor:C.a+'bb'},{label:'Oil & Gas',data:[{x:55,y:80,r:18}],backgroundColor:C.a2+'bb'},{label:'Data Centers',data:[{x:30,y:75,r:16}],backgroundColor:C.c+'bb'},{label:'Pharma',data:[{x:50,y:70,r:16}],backgroundColor:C.o+'bb'},{label:'Power',data:[{x:60,y:65,r:14}],backgroundColor:C.y+'bb'},{label:'Automotive',data:[{x:55,y:55,r:12}],backgroundColor:C.p+'bb'},{label:'Food & Bev',data:[{x:40,y:60,r:12}],backgroundColor:C.t2+'bb'}]},options:{responsive:true,maintainAspectRatio:false,scales:{x:{title:{display:true,text:'Ease of Entry (lower = easier) \u2192',color:C.t3},grid:{color:C.b},min:20,max:80},y:{title:{display:true,text:'Revenue Potential \u2192',color:C.t3},grid:{color:C.b},min:40,max:100}},plugins:{legend:{position:'bottom'}}}});
+</script>
+</body>
+</html>
